@@ -103,13 +103,11 @@ class instance extends InstanceBase {
                 label: 'Local Data Server Address',
                 width: 8,
                 default: "http://localhost",
-                required: true,
             },
             {
                 type: 'number',
                 id: 'localPort',
                 label: 'Local Data Server Port',
-                required: true,
                 min: 1,
                 max: 65535,
                 width: 4,
