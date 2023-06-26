@@ -1,0 +1,22 @@
+{
+  "name": "slmngg-controller",
+  "version": "2.0.0",
+  "description": "Control SLMN.GG from Companion",
+  "manufacturer": "SLMN.GG",
+  "product": "Controller",
+  "shortname": "slmngg",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "SLMN",
+  "license": "ISC",
+  "dependencies": {
+    "@companion-module/base": "~1.4",
+    "obs-websocket-js": "^5.0.1",
+    "socket.io-client": "^4.5.1"
+  },
+  "devDependencies": {
+    "@companion-module/tools": "^1.3.2"
+  }
+}
