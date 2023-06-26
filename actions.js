@@ -193,7 +193,7 @@ module.exports = {
                     id: "setting"
                 }
             ],
-            async callback() {
+            async callback({ options }) {
                 return instance.sendAction("set-observer-setting", { setting: options.setting, value: "toggle" })
             }
         })
