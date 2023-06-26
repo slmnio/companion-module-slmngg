@@ -23,7 +23,7 @@ function feedbackArray(key, override) {
                 ...options,
                 ...override
             };
-        }
+        }        console.log(presetFeedback)
         return [presetFeedback];
     }
 
@@ -46,7 +46,7 @@ exports.getPresets = function () {
             color: Colors.White,
             bgcolor: Colors.Black,
         },
-        steps: [ { down: [ { actionId: 'toggle_broadcast_advertise', } ]}, ],
+        steps: [ { down: [ { actionId: 'toggle_broadcast_advertise', } ]}],
         feedbacks: feedbackArray("broadcast_advertise"),
     })
     presets["player_cams"] = ({
@@ -59,7 +59,7 @@ exports.getPresets = function () {
             color: Colors.White,
             bgcolor: Colors.Black,
         },
-        steps: [ { down: [ { actionId: 'toggle_cams', } ]}, ],
+        steps: [ { down: [ { actionId: 'toggle_cams', } ]}],
         feedbacks: feedbackArray("broadcast_show_cams"),
     })
     presets["flip_teams"] = ({
@@ -72,7 +72,7 @@ exports.getPresets = function () {
             color: Colors.White,
             bgcolor: Colors.Black,
         },
-        steps: [ { down: [ { actionId: 'toggle_flip_teams', } ]}, ],
+        steps: [ { down: [ { actionId: 'toggle_flip_teams', } ]}],
         feedbacks: feedbackArray("match_flip_teams"),
     })
     presets["map_attack"] = ({
@@ -85,7 +85,7 @@ exports.getPresets = function () {
             color: Colors.White,
             bgcolor: Colors.Black,
         },
-        steps: [ { down: [ { actionId: 'toggle_map_attack', options: { useNull: true } } ]}, ],
+        steps: [ { down: [ { actionId: 'toggle_map_attack', options: { useNull: true } } ]}],
         feedbacks: feedbackArray("broadcast_map_attack"),
     })
 
@@ -104,7 +104,7 @@ exports.getPresets = function () {
             color: Colors.White,
             bgcolor: Colors.Black,
         },
-        steps: [ { down: [ { actionId: 'toggle_observer_setting', options: { setting: "Show syncer" } } ]}, ],
+        steps: [ { down: [ { actionId: 'toggle_observer_setting', options: { setting: "Show syncer" } } ]}],
         feedbacks: feedbackArray("broadcast_observer_settings", { setting: "Show syncer" }),
     })
 
@@ -118,7 +118,7 @@ exports.getPresets = function () {
             color: Colors.White,
             bgcolor: Colors.Black,
         },
-        steps: [ { down: [ { actionId: 'toggle_observer_setting', options: { setting: "Show overlay" } } ]}, ],
+        steps: [ { down: [ { actionId: 'toggle_observer_setting', options: { setting: "Show overlay" } } ]}],
         feedbacks: feedbackArray("broadcast_observer_settings", { setting: "Show overlay" }),
     })
 
@@ -130,6 +130,12 @@ exports.getPresets = function () {
         style: {
             text: '$(slmngg:match_team1_code)',
             size: 24,
+            color: Colors.White,
+            bgcolor: Colors.Black,
+        },
+        previewStyle: {
+            text: "Team 1\nCode",
+            size: 18,
             color: Colors.White,
             bgcolor: Colors.Black,
         },
@@ -146,6 +152,12 @@ exports.getPresets = function () {
             color: Colors.White,
             bgcolor: Colors.Black,
         },
+        previewStyle: {
+            text: "Team 2\nCode",
+            size: 18,
+            color: Colors.White,
+            bgcolor: Colors.Black,
+        },
         feedbacks: feedbackArray("theme_ready", { teamSelect: "num-2" }),
         steps: []
     })
@@ -156,6 +168,12 @@ exports.getPresets = function () {
         style: {
             text: '$(slmngg:match_left_code)',
             size: 24,
+            color: Colors.White,
+            bgcolor: Colors.Black,
+        },
+        previewStyle: {
+            text: "Left\nCode",
+            size: 18,
             color: Colors.White,
             bgcolor: Colors.Black,
         },
@@ -172,6 +190,12 @@ exports.getPresets = function () {
             color: Colors.White,
             bgcolor: Colors.Black,
         },
+        previewStyle: {
+            text: "Right\nCode",
+            size: 18,
+            color: Colors.White,
+            bgcolor: Colors.Black,
+        },
         feedbacks: feedbackArray("theme_ready", { teamSelect: "side-right" }),
         steps: []
     })
@@ -181,6 +205,12 @@ exports.getPresets = function () {
         type: "button",
         category: 'Displays',
         name: 'Left team logo',
+        previewStyle: {
+            text: "Left\nLogo",
+            size: 18,
+            color: Colors.White,
+            bgcolor: Colors.Black,
+        },
         feedbacks: feedbackArray("theme_logo", { teamSelect: "side-left", "size": "full" }),
         steps: []
     })
@@ -188,6 +218,12 @@ exports.getPresets = function () {
         type: "button",
         category: 'Displays',
         name: 'Right team logo',
+        previewStyle: {
+            text: "Right\nLogo",
+            size: 18,
+            color: Colors.White,
+            bgcolor: Colors.Black,
+        },
         feedbacks: feedbackArray("theme_logo", { teamSelect: "side-right", "size": "full" }),
         steps: []
     })
@@ -202,6 +238,12 @@ exports.getPresets = function () {
             bgcolor: Colors.Black,
             alignment: "center:bottom",
             pngalignment: "center:top",
+        },
+        previewStyle: {
+            text: "Left\nLogo & code",
+            size: 18,
+            color: Colors.White,
+            bgcolor: Colors.Black,
         },
         feedbacks: feedbackArray("theme_logo", { teamSelect: "side-left", "size": "medium" }),
         steps: []
@@ -218,6 +260,12 @@ exports.getPresets = function () {
             alignment: "center:bottom",
             pngalignment: "center:top",
         },
+        previewStyle: {
+            text: "Right\nLogo & code",
+            size: 18,
+            color: Colors.White,
+            bgcolor: Colors.Black,
+        },
         feedbacks: feedbackArray("theme_logo", { teamSelect: "side-right", "size": "medium" }),
         steps: []
     })
@@ -229,7 +277,13 @@ exports.getPresets = function () {
         category: 'Displays',
         name: 'Tally',
         style: {
-            text: 'Tally',
+            text: '$(slmngg:staff_observer_number)',
+            size: 30,
+            color: Colors.White,
+            bgcolor: Colors.Black,
+        },
+        previewStyle: {
+            text: "Obs Tally",
             size: 18,
             color: Colors.White,
             bgcolor: Colors.Black,
@@ -253,7 +307,8 @@ exports.getPresets = function () {
             color: Colors.White,
             bgcolor: Colors.Black,
         },
-        steps: [ { down: [ { actionId: 'prod_trigger', options: { event: "skip_song", data: "break" } } ]}, ]
+        steps: [{ down: [{ actionId: 'prod_trigger', options: { event: "skip_song", data: "break" } }] }],
+        feedbacks: []
     })
     presets["trigger_music_desk"] = ({
         type: "button",
@@ -265,7 +320,8 @@ exports.getPresets = function () {
             color: Colors.White,
             bgcolor: Colors.Black,
         },
-        steps: [ { down: [ { actionId: 'prod_trigger', options: { event: "skip_song", data: "desk" } } ]}, ]
+        steps: [ { down: [ { actionId: 'prod_trigger', options: { event: "skip_song", data: "desk" } } ]}],
+        feedbacks: []
     })
     presets["trigger_map_music"] = ({
         type: "button",
@@ -277,7 +333,8 @@ exports.getPresets = function () {
             color: Colors.White,
             bgcolor: Colors.Black,
         },
-        steps: [ { down: [ { actionId: 'prod_trigger', options: { event: "fade_map_music", data: "" } } ]}, ]
+        steps: [ { down: [ { actionId: 'prod_trigger', options: { event: "fade_map_music", data: "" } } ]}],
+        feedbacks: []
     })
     presets["set_title"] = ({
         type: "button",
@@ -289,7 +346,8 @@ exports.getPresets = function () {
             color: Colors.White,
             bgcolor: Colors.Black,
         },
-        steps: [ { down: [ { actionId: 'set_title' } ]}, ]
+        steps: [ { down: [ { actionId: 'set_title' } ]}],
+        feedbacks: []
     })
     presets["multi_map_win_team_1"] = ({
         type: "button",
@@ -301,7 +359,8 @@ exports.getPresets = function () {
             color: Colors.White,
             bgcolor: Colors.Black,
         },
-        steps: [ { down: [ { actionId: 'multi_map_win', options: { unsetMapAttack: true, teamNum: 1 } } ]}, ]
+        steps: [ { down: [ { actionId: 'multi_map_win', options: { unsetMapAttack: true, teamNum: 1 } } ]}],
+        feedbacks: []
     })
     presets["multi_map_win_team_2"] = ({
         type: "button",
@@ -313,7 +372,45 @@ exports.getPresets = function () {
             color: Colors.White,
             bgcolor: Colors.Black,
         },
-        steps: [ { down: [ { actionId: 'multi_map_win', options: { unsetMapAttack: true, teamNum: 2 } } ]}, ]
+        steps: [ { down: [ { actionId: 'multi_map_win', options: { unsetMapAttack: true, teamNum: 2 } } ]}],
+        feedbacks: []
+    })
+
+
+    presets["desk_display_match_paused"] = ({
+        type: "button",
+        category: "Desk Display",
+        name: "Match Paused",
+        style: {
+            text: "Desk\\nMatch\\nPaused",
+            size: 18,
+            color: Colors.White,
+            bgcolor: Colors.Black
+        },
+        steps: [
+            {
+                down: [
+                    {
+                        actionId: "desk_display_text",
+                        options: {
+                            "style": "Event",
+                            "mainText": "Match Paused"
+                        }
+                    }
+                ]
+            },
+            {
+                down: [
+                    {
+                        actionId: "desk_display_special",
+                        options: {
+                            "display": "Match"
+                        }
+                    }
+                ]
+            }
+        ],
+        feedbacks: []
     })
 
     return presets;

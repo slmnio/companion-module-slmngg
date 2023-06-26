@@ -10,6 +10,13 @@ exports.updateVariableDefinitions = function () {
 	variables.push({ variableId: "client_id", name: "Production client ID" })
 	variables.push({ variableId: "client_staff", name: "Production client staff record ID" })
 	variables.push({ variableId: "broadcast_key", name: "Broadcast key" })
+	variables.push({ variableId: "broadcast_name", name: "Broadcast name" })
+	variables.push({ variableId: "broadcast_relative_name", name: "Broadcast relative name" })
+
+	variables.push({ variableId: "broadcast_event_name", name: "Broadcast event name" })
+	variables.push({ variableId: "broadcast_event_short", name: "Broadcast event short name" })
+	variables.push({ variableId: "broadcast_event_id", name: "Broadcast event ID" })
+	variables.push({ variableId: "broadcast_desk_display", name: "Broadcast Desk Display" })
 
 	variables.push({ variableId: "broadcast_countdown_end", name: "Broadcast countdown end", description: "Time that the countdown ends" })
 	variables.push({ variableId: "broadcast_map_attack", name: "Broadcast map attack", description: "Which side of the overlay is attacking" })

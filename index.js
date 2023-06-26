@@ -247,7 +247,7 @@ class instance extends InstanceBase {
             if (client.broadcast?.length) { // client.broadcast = object[]
                 let broadcastID = client.broadcast[0];
                 let broadcast = await this.getData(broadcastID);
-                this.generateBroadcast(broadcast);
+                await this.generateBroadcast(broadcast);
 
                 if (broadcast?.live_match?.length) {
                     let matchID = broadcast.live_match[0];
@@ -294,17 +294,23 @@ class instance extends InstanceBase {
         this.setState("client_id", client.id);
         this.setState("client_staff", client.staff?.[0]);
     }
-    generateBroadcast(broadcast) {
+    async generateBroadcast(broadcast) {
         // console.log(new Date().toISOString(), "gen:broadcast", broadcast?.id);
         if (!broadcast) {
             return [
                 "broadcast_key",
+                "broadcast_name",
+                "broadcast_relative_name",
                 "broadcast_countdown_end",
                 "broadcast_map_attack",
                 "broadcast_show_live_match",
                 "broadcast_advertise",
                 "broadcast_show_cams",
-                "broadcast_observer_settings"
+                "broadcast_observer_settings",
+                "broadcast_desk_display",
+                "broadcast_event_name",
+                "broadcast_event_id",
+                "broadcast_event_theme_id",
             ].forEach(key => {
                 this.setState(key, undefined);
             })
@@ -312,13 +318,68 @@ class instance extends InstanceBase {
         this.setState("broadcast_key", broadcast.key);
         this.socket.emit("prod-broadcast-join", broadcast.key)
 
+        this.setState("broadcast_name", broadcast.name);
+        this.setState("broadcast_relative_name", broadcast.relative_name);
+
         this.setState("broadcast_countdown_end", broadcast.countdown_end);
         this.setState("broadcast_map_attack", broadcast.map_attack);
 
         this.setState("broadcast_show_live_match", broadcast.show_live_match);
         this.setState("broadcast_advertise", broadcast.advertise);
         this.setState("broadcast_show_cams", broadcast.show_cams);
+        this.setState("broadcast_desk_display", broadcast.desk_display);
         this.setState("broadcast_observer_settings", (broadcast.observer_settings || []).join(", "));
+
+
+        if (broadcast.event?.length) {
+            let eventID = broadcast.event[0];
+            let event = await this.getData(eventID);
+            if (!event) {
+                return [
+                    "broadcast_event_name",
+                    "broadcast_event_short",
+                    "broadcast_event_id",
+                    "broadcast_event_theme_id",
+                ].forEach(key => {
+                    this.setState(key, undefined);
+                })
+            }
+
+            this.setState("broadcast_event_short", event.short);
+            this.setState("broadcast_event_name", event.name);
+            this.setState("broadcast_event_id", event.id);
+            this.setState("broadcast_event_theme_id", event.theme?.[0]);
+
+            if (event.theme?.[0]) {
+                let theme = await this.getData(event.theme?.[0]);
+                if (theme) {
+                    this.setState("broadcast_event_theme_id", theme.id);
+                    this.setState("broadcast_event_theme_logo_background", theme.color_logo_background);
+                    this.setState("broadcast_event_theme_text_on_logo_background", theme.color_text_on_logo_background);
+                    this.setState("broadcast_event_theme_color", theme.color_theme);
+                    this.setState("broadcast_event_theme_text_on_theme", theme.color_text_on_theme);
+                }
+            } else {
+                // unset theme
+
+                this.setState("broadcast_event_theme_logo_background", "")
+                this.setState("broadcast_event_theme_text_on_logo_background", "")
+                this.setState("broadcast_event_theme_color", "")
+                this.setState("broadcast_event_theme_text_on_theme", "")
+                this.setState("broadcast_event_theme_ready", false);
+            }
+
+        } else {
+            return [
+                "broadcast_event_name",
+                "broadcast_event_id",
+                "broadcast_event_theme_id",
+            ].forEach(key => {
+                this.setState(key, undefined);
+            })
+        }
+
+
         // console.log("broadcast.observer_settings", this.states.get("broadcast_observer_settings"))
         // console.log("Show syncer", this.states.get("broadcast_observer_settings").includes("Show syncer"))
     }

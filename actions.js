@@ -70,7 +70,7 @@ module.exports = {
             options: [
                 {
                     type: 'textinput', useVariables: true,
-                    name: 'Action',
+                    label: 'Action',
                     id: 'action',
                     default: 'create',
                 },
@@ -87,13 +87,13 @@ module.exports = {
             options: [
                 {
                     type: 'textinput', useVariables: true,
-                    name: 'Event',
+                    label: 'Event',
                     id: 'event',
                     default: 'create',
                 },
                 {
                     type: 'textinput', useVariables: true,
-                    name: 'Data',
+                    label: 'Data',
                     id: 'data',
                     default: 'create',
                 },
@@ -117,7 +117,7 @@ module.exports = {
             options: [
                 {
                     type: 'textinput', useVariables: true,
-                    name: 'Side',
+                    label: 'Side',
                     id: 'side',
                     default: 'Left',
                 },
@@ -133,7 +133,7 @@ module.exports = {
             options: [
                 {
                     type: 'checkbox',
-                    name: 'Toggle Through Empty?',
+                    label: 'Toggle Through Empty?',
                     id: 'useNull',
                     default: false,
                 },
@@ -161,13 +161,13 @@ module.exports = {
             options: [
                 {
                     type: 'checkbox',
-                    name: 'Unset Map Attack?',
+                    label: 'Unset Map Attack?',
                     id: 'unsetMapAttack',
                     default: false,
                 },
                 {
                     type: 'textinput', useVariables: true,
-                    name: 'Team Number',
+                    label: 'Team Number',
                     id: 'teamNum',
                     default: '1',
                 },
@@ -185,9 +185,9 @@ module.exports = {
                 {
                     type: "dropdown",
                     choices: [
-                        { id: "Show syncer", name: "Syncer" },
-                        { id: "Show overlay", name: "Overlay" },
-                        { id: "Use basic overlay", name: "Basic overlay" },
+                        { id: "Show syncer", label: "Syncer" },
+                        { id: "Show overlay", label: "Overlay" },
+                        { id: "Use basic overlay", label: "Basic overlay" },
                     ],
                     default: "Show syncer",
                     id: "setting"
@@ -195,6 +195,70 @@ module.exports = {
             ],
             async callback() {
                 return instance.sendAction("set-observer-setting", { setting: options.setting, value: "toggle" })
+            }
+        })
+
+        addAction("desk_display_special", {
+            name: "Set Special Desk Display",
+            description: "",
+            options: [
+                {
+                    type: "dropdown",
+                    id: "display",
+                    default: "Match",
+                    label: "Display mode",
+                    choices: [
+                        { id: "Match", label: "Match (default)" },
+                        { id: "Predictions", label: "Predictions" },
+                        { id: "Maps", label: "Maps" },
+                    ]
+                }
+            ],
+            async callback({ options }) {
+                return instance.sendAction("update-broadcast", {
+                    deskDisplayMode: options.display
+                })
+            }
+        })
+        addAction("desk_display_text", {
+            name: "Set Desk Display with Text",
+            description: "",
+            options: [
+                {
+                    type: "dropdown",
+                    id: "style",
+                    default: "Event",
+                    label: "Style",
+                    choices: [
+                        { id: "Event", label: "Event" },
+                        { id: "Team 1", label: "Team 1" },
+                        { id: "Team 2", label: "Team 2" },
+                    ]
+                },
+                {
+                    type: "textinput",
+                    useVariables: true,
+                    id: "mainText",
+                    label: "Main text",
+                },
+                {
+                    type: "textinput",
+                    useVariables: true,
+                    id: "smallText",
+                    label: "Small text",
+                }
+            ],
+            async callback({ options }, { parseVariablesInString }) {
+                const [mainText, smallText] = await Promise.all([options.mainText, options.smallText].map(t => parseVariablesInString(t)))
+
+                let text = mainText;
+                if (smallText && smallText !== "") {
+                    text = smallText + "|" + mainText;
+                }
+                return instance.sendAction("update-broadcast", {
+                    deskDisplayMode: `Notice (${options.style})`,
+                    deskDisplayText: text
+                })
             }
         })
 

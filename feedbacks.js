@@ -4,6 +4,18 @@
 
 const Colors = require("./colors");
 
+async function getThemeB64(address, themeID, size) {
+    return getImageB64(`${address}/theme.png?id=${themeID}&${size || "size=72&padding=20"}`)
+}
+
+async function getImageB64(url) {
+    // `${this.config.dataServerAddress}/theme.png?id=${themeID}&${sizes[feedback.options.size] || "size=72&padding=20"}`
+    const image = await fetch(url)
+    const b64 = Buffer.from(await image.arrayBuffer()).toString("base64")
+    const contentType = image.headers.get('content-type');
+    return `data:${contentType};base64,${b64}`;
+}
+
 exports.initFeedbacks = function () {
     const feedbacks = {};
 
@@ -226,6 +238,21 @@ exports.initFeedbacks = function () {
         }
     })
 
+    addFeedback("event_theme", {
+        name: "Event Theme",
+        check: ["broadcast_event_theme_color"],
+        options: [],
+        callback: (feedback) => {
+            // console.log("theme_ready")
+            console.log(this.states.get("broadcast_event_theme_color"))
+            if (!this.states.get("broadcast_event_theme_color")) return {};
+            return {
+                bgcolor: Colors.getHex(this.states.get(`broadcast_event_theme_color`)),
+                color: Colors.getHex(this.states.get(`broadcast_event_theme_text_on_theme`)),
+            }
+        }
+    })
+
     addFeedback("theme_logo", {
         name: "Team Logo",
         key: "theme_logo",
@@ -264,25 +291,49 @@ exports.initFeedbacks = function () {
             console.log("theme ID", themeID, this.states.get(`team_${teamCode}_name`))
 
             const sizes = {
-                "full": "size=70&padding=20",
-                "medium": "size=48&padding=20",
+                "full": "size=72&padding=20",
+                "medium": "size=44&padding=20",
                 "small": "size=35&padding=20",
             }
 
-            const image = await fetch(`${this.config.dataServerAddress}/theme.png?id=${themeID}&${sizes[feedback.options.size] || "size=70&padding=20"}`)
-            const b64 = Buffer.from(await image.arrayBuffer()).toString("base64")
-            const contentType = image.headers.get('content-type');
-            const imageBase64 =
-                `data:${contentType};base64,${b64}`;
             return {
-                png64: imageBase64,
-                bgcolor: Colors.getHex(this.states.get(`team_${teamCode}_theme_color`)),
-                color: Colors.getHex(this.states.get(`team_${teamCode}_theme_text_on_theme`)),
+                png64: await getThemeB64(this.config?.dataServerAddress, themeID, sizes[feedback.options.size]),
+                bgcolor: Colors.getHex(this.states.get(`team_${teamCode}_theme_logo_background`)),
+                color: Colors.getHex(this.states.get(`team_${teamCode}_theme_text_on_logo_background`)),
             }
-            /*
-             * get the team's theme ID and download https://data.slmn.gg/theme.png?id={ID}&size=70&padding=20
-             * get the base 64 png
-             */
+        }
+    })
+    addFeedback("event_logo", {
+        name: "Event Logo",
+        check: ["theme_ready", "broadcast_event_theme_Id"],
+        options: [
+            {
+                type: "dropdown",
+                id: "size",
+                label: "Image size",
+                default: "full",
+                choices: [
+                    {id: "full", label: "Full"},
+                    {id: "medium", label: "Medium"},
+                    {id: "small", label: "Small"},
+                ]
+            }
+        ],
+        callback: async (feedback) => {
+            let themeID = this.states.get(`broadcast_event_theme_id`)
+            if (!themeID) return {};
+
+            const sizes = {
+                "full": "size=72&padding=20",
+                "medium": "size=44&padding=20",
+                "small": "size=35&padding=20",
+            }
+
+            return {
+                png64: await getThemeB64(this.config?.dataServerAddress, themeID, sizes[feedback.options.size]),
+                bgcolor: Colors.getHex(this.states.get(`broadcast_event_theme_logo_background`)),
+                color: Colors.getHex(this.states.get(`broadcast_event_theme_text_on_logo_background`)),
+            }
         }
     })
 
