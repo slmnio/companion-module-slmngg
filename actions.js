@@ -173,7 +173,7 @@ module.exports = {
                 },
             ],
             async callback({ options }, { parseVariablesInString }) {
-                const teamNum = await parseVariablesInString(teamNum);
+                const teamNum = await parseVariablesInString(options.teamNum);
                 return instance.sendAction("multi-map-win", { teamNum, unsetMapAttack: options.unsetMapAttack })
             }
         })
