@@ -51,6 +51,7 @@ There are a few presets you can look through to help you get started.
 ![image](https://github.com/slmnio/companion-module-slmngg/assets/15251071/823d040e-bba7-4491-94ee-64f843c93369)
 
 The features we add get extensively tested in our productions, so you should find things that will be useful for you. For example, teams can always be referred to as either 1 or 2 (as in the broadcast schedule) or as left or right (as showing on the in-game overlay). You can use this in conjunction with the Swap Teams action to make some reactive displays.
+
 ![image](https://github.com/slmnio/companion-module-slmngg/assets/15251071/42011eaf-5e88-4028-87b2-b6ad0ca31663)
 
 
