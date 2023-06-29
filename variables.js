@@ -18,6 +18,9 @@ exports.updateVariableDefinitions = function () {
 	variables.push({ variableId: "broadcast_event_id", name: "Broadcast event ID" })
 	variables.push({ variableId: "broadcast_desk_display", name: "Broadcast Desk Display" })
 
+	variables.push({ variableId: "producer_program_scene", name: "Producer Program scene name" })
+	variables.push({ variableId: "producer_preview_scene", name: "Producer Preview scene name" })
+
 	variables.push({ variableId: "broadcast_countdown_end", name: "Broadcast countdown end", description: "Time that the countdown ends" })
 	variables.push({ variableId: "broadcast_map_attack", name: "Broadcast map attack", description: "Which side of the overlay is attacking" })
 	variables.push({ variableId: "broadcast_show_live_match", name: "Broadcast show live match", description: "Show live match on break" })

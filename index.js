@@ -200,6 +200,10 @@ class instance extends InstanceBase {
         this.socket.on("prod_preview_program_change", (data) => {
             console.log("prod_preview", data)
             const { broadcastKey, previewScene, programScene } = data;
+
+            this.setState("producer_program_scene", programScene)
+            this.setState("producer_preview_scene", previewScene)
+
             if (sceneTargetsMe(this.states.get("staff_observer_number"), programScene)) {
                 this.setState("observer_tally", "program")
             } else if (sceneTargetsMe(this.states.get("staff_observer_number"), previewScene)) {
