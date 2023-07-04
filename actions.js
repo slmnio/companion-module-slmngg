@@ -211,6 +211,7 @@ module.exports = {
                         { id: "Match", label: "Match (default)" },
                         { id: "Predictions", label: "Predictions" },
                         { id: "Maps", label: "Maps" },
+                        { id: "Scoreboard", label: "Scoreboard" },
                     ]
                 }
             ],
