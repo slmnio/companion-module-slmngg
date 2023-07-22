@@ -34,11 +34,35 @@ module.exports = {
             }
         })
         addAction("prediction_create", {
-            name: "Create Prediction",
-            options: [],
-            async callback() {
+            name: "Create Match Prediction",
+            options: [
+                {
+                    type: "number",
+                    label: "Prediction duration (seconds)",
+                    id: "timer",
+                    default: 300
+                }
+            ],
+            async callback({ options }) {
                 instance.setState("prediction_last", "create")
-                return instance.sendAction("manage-prediction", { predictionAction: "create" });
+                instance.setState("prediction_type", "match")
+                return instance.sendAction("manage-prediction", { predictionType: "match", predictionAction: "create", "autoLockAfter": options.timer || 300  });
+            }
+        })
+        addAction("prediction_create_map", {
+            name: "Create Map Prediction",
+            options: [
+                {
+                    type: "number",
+                    label: "Prediction duration (seconds)",
+                    id: "timer",
+                    default: 180
+                }
+            ],
+            async callback({ options }) {
+                instance.setState("prediction_last", "create")
+                instance.setState("prediction_type", "map")
+                return instance.sendAction("manage-prediction", { predictionType: "map", predictionAction: "create", "autoLockAfter": options.timer || 180 });
             }
         })
         addAction("prediction_lock", {

@@ -297,6 +297,73 @@ exports.getPresets = function () {
 
 
 
+    presets["trigger_prediction_create"] = ({
+        type: "button",
+        category: 'Predictions',
+        name: 'Create Match Pred',
+        style: {
+            text: 'Create Match Pred',
+            size: 18,
+            color: Colors.White,
+            bgcolor: Colors.Lime,
+        },
+        steps: [{ down: [{ actionId: 'prediction_create' }] }],
+        feedbacks: []
+    })
+    presets["trigger_prediction_create_map"] = ({
+        type: "button",
+        category: 'Predictions',
+        name: 'Create Map Pred',
+        style: {
+            text: 'Create Map Pred',
+            size: 18,
+            color: Colors.White,
+            bgcolor: Colors.Lime,
+        },
+        steps: [{ down: [{ actionId: 'prediction_create_map' }] }],
+        feedbacks: []
+    })
+    presets["trigger_prediction_lock"] = ({
+        type: "button",
+        category: 'Predictions',
+        name: 'Lock Pred',
+        style: {
+            text: 'Lock Pred',
+            size: 18,
+            color: Colors.White,
+            bgcolor: Colors.DarkBlue,
+        },
+        steps: [{ down: [{ actionId: 'prediction_lock' }] }],
+        feedbacks: []
+    })
+    presets["trigger_prediction_resolve"] = ({
+        type: "button",
+        category: 'Predictions',
+        name: 'Resolve Pred',
+        style: {
+            text: 'Resolve Pred',
+            size: 18,
+            color: Colors.White,
+            bgcolor: Colors.Purple,
+        },
+        steps: [{ down: [{ actionId: 'prediction_resolve' }] }],
+        feedbacks: []
+    })
+    presets["trigger_prediction_cancel"] = ({
+        type: "button",
+        category: 'Predictions',
+        name: 'Cancel Pred',
+        style: {
+            text: 'Cancel Pred',
+            size: 18,
+            color: Colors.White,
+            bgcolor: Colors.Red,
+        },
+        steps: [{ down: [{ actionId: 'prediction_cancel' }] }],
+        feedbacks: []
+    })
+
+
     presets["trigger_music_break"] = ({
         type: "button",
         category: 'Triggers',
