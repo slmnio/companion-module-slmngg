@@ -12,6 +12,7 @@ exports.updateVariableDefinitions = function () {
 	variables.push({ variableId: "broadcast_key", name: "Broadcast key" })
 	variables.push({ variableId: "broadcast_name", name: "Broadcast name" })
 	variables.push({ variableId: "broadcast_relative_name", name: "Broadcast relative name" })
+	variables.push({ variableId: "broadcast_live_text_channel_id", name: "Broadcast live Discord text channel ID" })
 
 	variables.push({ variableId: "broadcast_event_name", name: "Broadcast event name" })
 	variables.push({ variableId: "broadcast_event_short", name: "Broadcast event short name" })
@@ -47,6 +48,7 @@ exports.updateVariableDefinitions = function () {
 
 	([1,2,3,4,5,6]).forEach(num => {
 		variables.push({ variableId: `staff_observer_${num}`, name: `Observer ${num} Name`, description: `Name for observer ${num} from match player relationships` })
+		variables.push({ variableId: `staff_observer_${num}_code`, name: `Observer ${num} Code` })
 	});
 
 	variables.push({ variableId: `staff_observer_number`, name: `Observer Number`, description: `Observer number for the currently connected client` });
@@ -68,9 +70,10 @@ exports.updateVariableDefinitions = function () {
 		})
 	});
 
-	[1,2,3,4,5,6,7,8,9,10].forEach(num => {
+	[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24].forEach(num => {
 		variables.push({ variableId: `gfx_${num}_short`, description: `Short descriptor for GFX ${num}` })
 		variables.push({ variableId: `gfx_${num}_type`, description: `Type for GFX ${num}` })
+		variables.push({ variableId: `gfx_${num}_id`, description: `ID for GFX ${num}` })
 	});
 
 	// variables.push({ variableId: 'base_resolution', name: 'Current base (canvas) resolution' })

@@ -6,6 +6,23 @@ const { updateVariableDefinitions } = require('./variables')
 const { io } = require("socket.io-client");
 const { InstanceBase, InstanceStatus, runEntrypoint } = require("@companion-module/base");
 
+
+class MapObject {
+    constructor(text, arrays=false) {
+        this.arrays = arrays;
+        this.data = (text || "").split("\n").map(e => {
+            let [key, data] = e.split("=");
+            return { key, data: arrays ? (data || "").split(",") : data };
+        }).filter(e => e.key);
+    }
+    get(key) {
+        let data = this.data.find(n => n.key === key)?.data;
+        if (data === "false") return false;
+        if (data === "true") return true;
+        return data;
+    }
+}
+
 class instance extends InstanceBase {
     constructor(internal) {
         super(internal);
@@ -266,8 +283,17 @@ class instance extends InstanceBase {
                     gfx.forEach((g, i) => {
                         if (!g?.short) return;
                         this.setState(`gfx_${i+1}_short`, g.short);
+                        this.setState(`gfx_${i+1}_id`, g.id);
                         this.setState(`gfx_${i+1}_type`, g.type);
                     })
+
+                    if (gfx.length < 16) {
+                        for (let i = gfx.length; i < 16; i++) {
+                            this.setState(`gfx_${i+1}_short`, "");
+                            this.setState(`gfx_${i+1}_id`, "");
+                            this.setState(`gfx_${i+1}_type`, "");
+                        }
+                    }
                 }
 
             } else {
@@ -298,6 +324,8 @@ class instance extends InstanceBase {
         this.setState("client_id", client.id);
         this.setState("client_staff", client.staff?.[0]);
     }
+
+
     async generateBroadcast(broadcast) {
         // console.log(new Date().toISOString(), "gen:broadcast", broadcast?.id);
         if (!broadcast) {
@@ -315,6 +343,7 @@ class instance extends InstanceBase {
                 "broadcast_event_name",
                 "broadcast_event_id",
                 "broadcast_event_theme_id",
+                "broadcast_live_text_channel_id",
             ].forEach(key => {
                 this.setState(key, undefined);
             })
@@ -333,6 +362,15 @@ class instance extends InstanceBase {
         this.setState("broadcast_show_cams", broadcast.show_cams);
         this.setState("broadcast_desk_display", broadcast.desk_display);
         this.setState("broadcast_observer_settings", (broadcast.observer_settings || []).join(", "));
+
+        if (broadcast.discord_control) {
+            let discord = new MapObject(broadcast.discord_control);
+            this.setState("broadcast_live_text_channel_id", discord.get("live_text_channel"));
+        } else {
+            this.setState("broadcast_live_text_channel_id", undefined);
+        }
+
+
 
 
         if (broadcast.event?.length) {
@@ -510,8 +548,12 @@ class instance extends InstanceBase {
             ["observer", "lobby_admin", "producer", "observer_director"].forEach(role => {
                 [0,1,2,3,4,5].forEach((i) => {
                     let stateKey = `staff_${role}`;
-                    this.setState(stateKey + "_" + (i+1), "");
-                    if (i === 0) this.setState(stateKey, "");
+                    this.setState(stateKey + "_" + (i+1), ""); // name
+                    this.setState(stateKey + "_" + (i+1) + "_code", ""); // code
+                    if (i === 0) {
+                        this.setState(stateKey, "");
+                        this.setState(stateKey + "_code", "");
+                    }
                 });
             })
             return;
@@ -526,7 +568,7 @@ class instance extends InstanceBase {
                 let staff = await this.getData(relationship.player?.[0])
                 if (!staff) return;
 
-                // console.log("Player relationships set", relationship, staff);
+                console.log("Player relationships set", relationship, staff);
 
                 if (staff.id === this.states.get("client_staff")) {
                     // this staff = correct client?
@@ -548,13 +590,22 @@ class instance extends InstanceBase {
                 let stateKey = `staff_${singularName.toLowerCase().replace(/ /g, '_')}`;
 
                 if (rel?.player?.name) {
-                    let name = rel.player.short ? rel.player.short?.[0] : rel.player.name
+                    const name = rel.player.short ? rel.player.short?.[0] : rel.player.name
+                    const code = rel.player?.client_key || rel.player.name.toLowerCase();
 
                     this.setState(stateKey + "_" + (i+1), name)
-                    if (i === 0) this.setState(stateKey, name)
+                    this.setState(stateKey + "_" + (i+1)+ "_code", code);
+                    if (i === 0) {
+                        this.setState(stateKey, name)
+                        this.setState(stateKey + "_code", code)
+                    }
                 } else {
                     this.setState(stateKey + "_" + (i+1), "");
-                    if (i === 0) this.setState(stateKey, "");
+                    this.setState(stateKey + "_" + (i+1) + "_code", "");
+                    if (i === 0) {
+                        this.setState(stateKey, "");
+                        this.setState(stateKey + "_code", "");
+                    }
                 }
             })
         })

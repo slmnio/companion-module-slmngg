@@ -290,6 +290,30 @@ module.exports = {
                 })
             }
         })
+        addAction("set_gfx_index", {
+            name: "Set GFX Index",
+            description: "",
+            options: [
+                {
+                    type: "textinput",
+                    useVariables: true,
+                    id: "gfxID",
+                    label: "GFX Record ID",
+                },
+                {
+                    type: "textinput",
+                    useVariables: true,
+                    id: "index",
+                    label: "Index",
+                }
+            ],
+            async callback({ options }, { parseVariablesInString }) {
+                const [gfxID, index] = await Promise.all([options.gfxID, options.index].map(t => parseVariablesInString(t)))
+                return instance.sendAction("update-gfx-index", {
+                    gfxID, index
+                })
+            }
+        })
 
         return actions;
     }

@@ -54,6 +54,8 @@ The features we add get extensively tested in our productions, so you should fin
 
 ![image](https://github.com/slmnio/companion-module-slmngg/assets/15251071/42011eaf-5e88-4028-87b2-b6ad0ca31663)
 
+# Getting updates
 
+We will keep pushing updates to this repository as new features get added. You can run the **update.bat** script in your module folder to get new updates and install any new dependencies.
 
 
