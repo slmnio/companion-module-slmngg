@@ -190,14 +190,18 @@ module.exports = {
                     default: false,
                 },
                 {
-                    type: 'textinput', useVariables: true,
+                    type: 'dropdown',
+                    choices: [
+                        { id: "1", label: "Team 1" },
+                        { id: "2", label: "Team 2" },
+                    ],
                     label: 'Team Number',
                     id: 'teamNum',
                     default: '1',
                 },
             ],
-            async callback({ options }, { parseVariablesInString }) {
-                const teamNum = await parseVariablesInString(options.teamNum);
+            async callback({ options }) {
+                const teamNum = options.teamNum;
                 return instance.sendAction("multi-map-win", { teamNum, unsetMapAttack: options.unsetMapAttack })
             }
         })
