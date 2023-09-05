@@ -287,8 +287,8 @@ class instance extends InstanceBase {
                         this.setState(`gfx_${i+1}_type`, g.type);
                     })
 
-                    if (gfx.length < 16) {
-                        for (let i = gfx.length; i < 16; i++) {
+                    if (gfx.length < 24) {
+                        for (let i = gfx.length; i < 24; i++) {
                             this.setState(`gfx_${i+1}_short`, "");
                             this.setState(`gfx_${i+1}_id`, "");
                             this.setState(`gfx_${i+1}_type`, "");
