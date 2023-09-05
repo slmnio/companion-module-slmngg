@@ -420,28 +420,88 @@ exports.getPresets = function () {
         type: "button",
         category: 'Triggers',
         name: 'Map Win Team 1',
-        style: {
-            text: 'Map Win\\n$(slmngg:match_team1_code)',
+        previewStyle: {
+            text: 'Map Win\\nTeam 1',
             size: 18,
             color: Colors.White,
             bgcolor: Colors.Black,
         },
+        style: {
+            text: 'Map Win\\n$(slmngg:match_team1_code)',
+            size: 14,
+            color: Colors.White,
+            bgcolor: Colors.Black,
+            alignment: "center:bottom",
+            pngalignment: "center:top"
+        },
         steps: [ { down: [ { actionId: 'multi_map_win', options: { unsetMapAttack: true, teamNum: 1 } } ]}],
-        feedbacks: []
+        feedbacks: feedbackArray("theme_logo", { teamSelect: "num-1", size: "medium" })
     })
+
     presets["multi_map_win_team_2"] = ({
         type: "button",
         category: 'Triggers',
         name: 'Map Win Team 2',
-        style: {
-            text: 'Map Win\\n$(slmngg:match_team2_code)',
+        previewStyle: {
+            text: 'Map Win\\nTeam 2',
             size: 18,
             color: Colors.White,
             bgcolor: Colors.Black,
         },
+        style: {
+            text: 'Map Win\\n$(slmngg:match_team2_code)',
+            size: 14,
+            color: Colors.White,
+            bgcolor: Colors.Black,
+            alignment: "center:bottom",
+            pngalignment: "center:top"
+        },
         steps: [ { down: [ { actionId: 'multi_map_win', options: { unsetMapAttack: true, teamNum: 2 } } ]}],
-        feedbacks: []
+        feedbacks: feedbackArray("theme_logo", { teamSelect: "num-2", size: "medium" })
     })
+    presets["multi_map_win_left_team"] = ({
+        type: "button",
+        category: 'Triggers',
+        name: 'Map Win Left Team',
+        previewStyle: {
+            text: 'Map Win\\nLeft',
+            size: 18,
+            color: Colors.White,
+            bgcolor: Colors.Black,
+        },
+        style: {
+            text: 'Map Win\\n$(slmngg:match_left_code)',
+            size: 14,
+            color: Colors.White,
+            bgcolor: Colors.Black,
+            alignment: "center:bottom",
+            pngalignment: "center:top"
+        },
+        steps: [ { down: [ { actionId: 'multi_map_win', options: { unsetMapAttack: true, teamNum: "left" } } ]}],
+        feedbacks: feedbackArray("theme_logo", { teamSelect: "side-left", size: "medium" })
+    })
+    presets["multi_map_win_right_team"] = ({
+        type: "button",
+        category: 'Triggers',
+        name: 'Map Win Right Team',
+        previewStyle: {
+            text: 'Map Win\\nRight',
+            size: 18,
+            color: Colors.White,
+            bgcolor: Colors.Black,
+        },
+        style: {
+            text: 'Map Win\\n$(slmngg:match_right_code)',
+            size: 14,
+            color: Colors.White,
+            bgcolor: Colors.Black,
+            alignment: "center:bottom",
+            pngalignment: "center:top"
+        },
+        steps: [ { down: [ { actionId: 'multi_map_win', options: { unsetMapAttack: true, teamNum: "right" } } ]}],
+        feedbacks: feedbackArray("theme_logo", { teamSelect: "side-right", size: "medium" })
+    })
+
 
 
     presets["desk_display_match_paused"] = ({

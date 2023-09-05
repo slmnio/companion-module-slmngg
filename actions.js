@@ -194,6 +194,8 @@ module.exports = {
                     choices: [
                         { id: "1", label: "Team 1" },
                         { id: "2", label: "Team 2" },
+                        { id: "left", label: "Left team" },
+                        { id: "right", label: "Right team" },
                     ],
                     label: 'Team Number',
                     id: 'teamNum',
@@ -201,7 +203,11 @@ module.exports = {
                 },
             ],
             async callback({ options }) {
-                const teamNum = options.teamNum;
+                let teamNum = options.teamNum;
+                if (["left", "right"].includes(teamNum)) {
+                    // get number from schedule
+                    teamNum = (instance.states.get("match_flip_teams") ? [2, 1] : [1, 2])[teamNum === "left" ? 0 : 1];
+                }
                 return instance.sendAction("multi-map-win", { teamNum, unsetMapAttack: options.unsetMapAttack })
             }
         })
