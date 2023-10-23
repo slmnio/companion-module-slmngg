@@ -71,6 +71,54 @@ exports.initFeedbacks = function () {
             }
         }
     })
+    addFeedback("broadcast_countdown_active", {
+        name: "Countdown active",
+        options: [
+            {
+                type: 'colorpicker',
+                label: 'Foreground color (Hidden)',
+                id: 'fg',
+                default: Colors.White,
+            },
+            {
+                type: 'colorpicker',
+                label: 'Background color (Hidden)',
+                id: 'bg',
+                default: Colors.DarkBlue,
+            }
+        ],
+        callback: (feedback) => {
+            if (!this.states.get("broadcast_key")) return {};
+
+            if (this.states.get("broadcast_countdown_active")) {
+                return { color: feedback.options.fg, bgcolor: feedback.options.bg }
+            }
+        }
+    })
+    addFeedback("broadcast_countdown_needs_clear", {
+        name: "Countdown needs clear",
+        options: [
+            {
+                type: 'colorpicker',
+                label: 'Foreground color (Hidden)',
+                id: 'fg',
+                default: Colors.White,
+            },
+            {
+                type: 'colorpicker',
+                label: 'Background color (Hidden)',
+                id: 'bg',
+                default: Colors.Red,
+            }
+        ],
+        callback: (feedback) => {
+            if (!this.states.get("broadcast_key")) return {};
+
+            if (this.states.get("broadcast_countdown_needs_clear")) {
+                return { color: feedback.options.fg, bgcolor: feedback.options.bg }
+            }
+        }
+    })
 
 
     addFeedback("broadcast_advertise", {
@@ -244,7 +292,7 @@ exports.initFeedbacks = function () {
         options: [],
         callback: (feedback) => {
             // console.log("theme_ready")
-            console.log(this.states.get("broadcast_event_theme_color"))
+            // console.log(this.states.get("broadcast_event_theme_color"))
             if (!this.states.get("broadcast_event_theme_color")) return {};
             return {
                 bgcolor: Colors.getHex(this.states.get(`broadcast_event_theme_color`)),
@@ -288,7 +336,7 @@ exports.initFeedbacks = function () {
             let teamCode = feedback.options.teamSelect.split("-").pop();
             let themeID = this.states.get(`team_${teamCode}_theme_id`)
             if (!themeID) return {};
-            console.log("theme ID", themeID, this.states.get(`team_${teamCode}_name`))
+            // console.log("theme ID", themeID, this.states.get(`team_${teamCode}_name`))
 
             const sizes = {
                 "full": "size=72&padding=20",

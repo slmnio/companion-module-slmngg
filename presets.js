@@ -23,11 +23,40 @@ function feedbackArray(key, override) {
                 ...options,
                 ...override
             };
-        }        console.log(presetFeedback)
+        }
+        // console.log(presetFeedback)
         return [presetFeedback];
     }
 
     return [];
+}
+
+function feedbacksArray(keys, override) {
+    const _f = [];
+
+    for (let key of keys) {
+        let feedback = feedbacks[key];
+
+        if (feedback) {
+            let presetFeedback = {
+                feedbackId: key
+            }
+            if (feedback.options) {
+                let options = {};
+                feedback.options.forEach(opt => {
+                    options[opt.id] = opt.default;
+                })
+                presetFeedback.options = {
+                    ...options,
+                    ...override
+                };
+            }
+            // console.log(presetFeedback)
+            _f.push(presetFeedback)
+        }
+
+    }
+    return _f;
 }
 
 exports.getPresets = function () {
@@ -293,6 +322,27 @@ exports.getPresets = function () {
     })
 
 
+    presets["break_countdown"] = ({
+        type: "button",
+        category: 'Displays',
+        name: 'Break Countdown',
+        style: {
+            text: '$(slmngg:broadcast_countdown_seconds_text)',
+            size: 24,
+            color: Colors.White,
+            bgcolor: Colors.Black,
+        },
+        previewStyle: {
+            text: "00:00\\nBreak\\nCount",
+            size: 18,
+            color: Colors.White,
+            bgcolor: Colors.Black,
+        },
+        feedbacks: feedbacksArray(["broadcast_countdown_active", "broadcast_countdown_needs_clear"]),
+        steps: [ { down: [ { actionId: 'set_or_clear_countdown', options: { seconds: 300 } } ]}],
+    })
+
+
 
 
 
@@ -501,7 +551,6 @@ exports.getPresets = function () {
         steps: [ { down: [ { actionId: 'multi_map_win', options: { unsetMapAttack: true, teamNum: "right" } } ]}],
         feedbacks: feedbackArray("theme_logo", { teamSelect: "side-right", size: "medium" })
     })
-
 
 
     presets["desk_display_match_paused"] = ({

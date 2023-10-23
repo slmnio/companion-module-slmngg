@@ -40,6 +40,34 @@ class instance extends InstanceBase {
         this.states = new Map();
         this.config = config;
 
+        this.timerTick = setInterval(() => {
+            const now = new Date();
+            const end = this.states.get("broadcast_countdown_end");
+            const endTime = end ? new Date(end) : null
+            const diff = endTime ? Math.floor(((endTime - now)) / 1000) : -1;
+
+            // console.log(JSON.stringify({ end, endTime, diff }))
+            if (end && endTime) {
+                if (diff > 0) {
+                    this.setState("broadcast_countdown_seconds", diff);
+                    let [mins, secs] = [Math.floor(diff / 60), diff % 60].map(n => n.toString().padStart(2, "0"))
+                    this.setState("broadcast_countdown_seconds_text", [mins, secs].join(":"));
+                    this.setState("broadcast_countdown_active", true);
+                    this.setState("broadcast_countdown_needs_clear", false);
+                } else {
+                    this.setState("broadcast_countdown_seconds_text", "00:00");
+                    this.setState("broadcast_countdown_seconds", -1);
+                    this.setState("broadcast_countdown_active", true);
+                    this.setState("broadcast_countdown_needs_clear", true);
+                }
+            } else {
+                this.setState("broadcast_countdown_seconds_text", "--:--");
+                this.setState("broadcast_countdown_seconds", -1);
+                this.setState("broadcast_countdown_active", false);
+                this.setState("broadcast_countdown_needs_clear", false);
+            }
+            console.log("tick", this.states.get("broadcast_countdown_active"), this.states.get("broadcast_countdown_seconds"), "needs clear:", this.states.get("broadcast_countdown_needs_clear"))
+        }, 1000);
 
         this.config.dataServerHost = this.config.useLocal ? this.config.localHost : this.config.host;
         this.config.dataServerPort = this.config.useLocal ? this.config.localPort : this.config.port;
@@ -154,6 +182,9 @@ class instance extends InstanceBase {
     async destroy() {
         if (this.socket) {
             this.socket.disconnect();
+        }
+        if (this.timerTick) {
+            clearInterval(this.timerTick)
         }
     }
 
@@ -568,7 +599,7 @@ class instance extends InstanceBase {
                 let staff = await this.getData(relationship.player?.[0])
                 if (!staff) return;
 
-                console.log("Player relationships set", relationship, staff);
+                // console.log("Player relationships set", relationship, staff);
 
                 if (staff.id === this.states.get("client_staff")) {
                     // this staff = correct client?

@@ -169,6 +169,98 @@ module.exports = {
                 return instance.sendAction("update-broadcast", { mapAttack: side });
             }
         })
+        addAction("set_nudge_clear_countdown", {
+            name: "Set/Nudge/Clear Countdown",
+            options: [
+                {
+                    type: 'number',
+                    label: 'Countdown length (seconds)',
+                    id: 'seconds',
+                    default: 180,
+                },
+                {
+                    type: 'number',
+                    label: 'Additional time when re-pressed',
+                    id: 'additionalSeconds',
+                    default: 120,
+                },
+            ],
+            async callback({ options }) {
+                if (instance.states.get("broadcast_countdown_needs_clear")) {
+                    // clear
+                    await instance.sendAction("update-broadcast", { countdownEnd: null  });
+                    instance.setState("broadcast_countdown_active", false);
+                    instance.setState("broadcast_countdown_seconds", -1);
+                } else if (instance.states.get("broadcast_countdown_active")) {
+                    // clear
+                    const existingTime = new Date(instance.states.get("broadcast_countdown_end"));
+                    if (existingTime) {
+                        const targetTime = (new Date(existingTime.getTime() + ((options.additionalSeconds || options.seconds) * 1000))).getTime()
+                        const targetSeconds = Math.floor((targetTime - (new Date()).getTime()) / 1000);
+
+                        await instance.sendAction("update-broadcast", { countdownEnd: targetTime  });
+                        this.setState("broadcast_countdown_seconds", targetSeconds);
+                        this.setState("broadcast_countdown_active", true);
+                    } else {
+                        await instance.sendAction("update-broadcast", { countdownEnd: (new Date()).getTime() + (options.seconds * 1000)  });
+                        this.setState("broadcast_countdown_seconds", options.seconds);
+                        this.setState("broadcast_countdown_active", true);
+                    }
+                } else {
+                    await instance.sendAction("update-broadcast", { countdownEnd: (new Date()).getTime() + (options.seconds * 1000)  });
+                    this.setState("broadcast_countdown_seconds", options.seconds);
+                    this.setState("broadcast_countdown_active", true);
+                }
+            }
+        })
+        addAction("set_or_clear_countdown", {
+            name: "Set or Clear Countdown",
+            options: [
+                {
+                    type: 'number',
+                    label: 'Countdown length (seconds)',
+                    id: 'seconds',
+                    default: 180,
+                }
+            ],
+            async callback({ options }) {
+                if (instance.states.get("broadcast_countdown_active")) {
+                    // clear
+                    await instance.sendAction("update-broadcast", { countdownEnd: null  });
+                    instance.setState("broadcast_countdown_active", false);
+                    instance.setState("broadcast_countdown_seconds", -1);
+                } else {
+                    await instance.sendAction("update-broadcast", { countdownEnd: (new Date()).getTime() + (options.seconds * 1000)  });
+                    this.setState("broadcast_countdown_seconds", options.seconds);
+                    this.setState("broadcast_countdown_active", true);
+                }
+            }
+        })
+        addAction("set_countdown", {
+            name: "Set Countdown",
+            options: [
+                {
+                    type: 'number',
+                    label: 'Countdown length (seconds)',
+                    id: 'seconds',
+                    default: 180,
+                },
+            ],
+            async callback({ options }) {
+                await instance.sendAction("update-broadcast", { countdownEnd: (new Date()).getTime() + (options.seconds * 1000)  });
+                this.setState("broadcast_countdown_seconds", options.seconds);
+                this.setState("broadcast_countdown_active", true);
+            }
+        })
+        addAction("clear_countdown", {
+            name: "Clear Countdown",
+            options: [],
+            async callback() {
+                await instance.sendAction("update-broadcast", { countdownEnd: null  });
+                instance.setState("broadcast_countdown_active", false);
+                instance.setState("broadcast_countdown_seconds", -1);
+            }
+        })
 
         addAction("toggle_broadcast_advertise", {
             name: "Toggle Broadcast Advertise",
@@ -245,7 +337,10 @@ module.exports = {
                         { id: "Match", label: "Match (default)" },
                         { id: "Predictions", label: "Predictions" },
                         { id: "Maps", label: "Maps" },
+                        { id: "Drafted Maps", label: "Drafted Maps" },
                         { id: "Scoreboard", label: "Scoreboard" },
+                        { id: "Empty", label: "Empty" },
+                        { id: "Interview", label: "Interview" },
                     ]
                 }
             ],

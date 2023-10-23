@@ -22,6 +22,10 @@ exports.updateVariableDefinitions = function () {
 	variables.push({ variableId: "producer_program_scene", name: "Producer Program scene name" })
 	variables.push({ variableId: "producer_preview_scene", name: "Producer Preview scene name" })
 
+	variables.push({ variableId: "broadcast_countdown_seconds", name: "Broadcast countdown timer in raw seconds" })
+	variables.push({ variableId: "broadcast_countdown_seconds_text", name: "Broadcast countdown timer in formatted xx:xx" })
+	variables.push({ variableId: "broadcast_countdown_active", name: "Broadcast countdown is active" })
+	variables.push({ variableId: "broadcast_countdown_needs_clear", name: "Broadcast countdown needs to be cleared (sitting at 00:00)" })
 	variables.push({ variableId: "broadcast_countdown_end", name: "Broadcast countdown end", description: "Time that the countdown ends" })
 	variables.push({ variableId: "broadcast_map_attack", name: "Broadcast map attack", description: "Which side of the overlay is attacking" })
 	variables.push({ variableId: "broadcast_show_live_match", name: "Broadcast show live match", description: "Show live match on break" })
