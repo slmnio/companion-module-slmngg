@@ -339,8 +339,9 @@ module.exports = {
                         { id: "Maps", label: "Maps" },
                         { id: "Drafted Maps", label: "Drafted Maps" },
                         { id: "Scoreboard", label: "Scoreboard" },
-                        { id: "Empty", label: "Empty" },
+                        { id: "Hidden", label: "Hidden" },
                         { id: "Interview", label: "Interview" },
+                        { id: "Casters", label: "Casters" },
                     ]
                 }
             ],
