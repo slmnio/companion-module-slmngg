@@ -73,6 +73,8 @@ class instance extends InstanceBase {
         this.config.dataServerPort = this.config.useLocal ? this.config.localPort : this.config.port;
         this.config.dataServerAddress = [this.config.dataServerHost, this.config.dataServerPort].join(":")
 
+        this.config.clientKey = this.config.clientKey?.toLowerCase();
+
         await this.connectDataServer();
         this.updateEverything();
     }
