@@ -613,6 +613,8 @@ class instance extends InstanceBase {
         let obsCount = 0;
         let clientStaffRoles = [];
 
+        this.setState("staff_observer_number", "");
+
         for (const relID of match.player_relationships) {
             let relationship = await this.getData(relID);
             if (relationship) {
@@ -628,7 +630,7 @@ class instance extends InstanceBase {
 
                     // console.log("Player relationships set", relationship, staff);
 
-                    if (staff.id === this.states.get("client_staff")) {
+                    if (staff.id === this.states.get("client_staff") && relationship.singular_name === "Observer") {
                         // this staff = correct client?
                         this.setState("staff_observer_number", obsCount);
                     }
