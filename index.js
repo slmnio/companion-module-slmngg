@@ -66,7 +66,7 @@ class instance extends InstanceBase {
                 this.setState("broadcast_countdown_active", false);
                 this.setState("broadcast_countdown_needs_clear", false);
             }
-            console.log("tick", this.states.get("broadcast_countdown_active"), this.states.get("broadcast_countdown_seconds"), "needs clear:", this.states.get("broadcast_countdown_needs_clear"))
+            // console.log("tick", this.states.get("broadcast_countdown_active"), this.states.get("broadcast_countdown_seconds"), "needs clear:", this.states.get("broadcast_countdown_needs_clear"))
         }, 1000);
 
         this.config.dataServerHost = this.config.useLocal ? this.config.localHost : this.config.host;
@@ -237,10 +237,25 @@ class instance extends InstanceBase {
             this.generateData();
         })
 
-        function sceneTargetsMe(obsNumber, sceneName) {
-            let number = obsNumber;
-            if (!number || !sceneName) return false;
-            return ["Obs", "Game"].some(str => sceneName.toLowerCase().includes(str.toLowerCase())) && sceneName.includes(number.toString());
+        const sceneTargetsMyRoles = (sceneName) => {
+            const roles = JSON.parse(this.states.get("client_staff_roles") || "[]");
+
+            if (sceneName.toLowerCase().includes("replay")) {
+                // this.log("debug", `Scene [${sceneName}] checking against ${roles.join("/")}`)
+                return roles.some(r => r.toLowerCase().includes("replay"));
+            }
+            if (sceneName.toLowerCase().includes("stat")) {
+                // this.log("debug", `Scene [${sceneName}] checking against ${roles.join("/")}`)
+                return roles.some(r => r.toLowerCase().includes("stat"));
+            }
+            if (["OBSDIR", "Director", "Clean feed"].some(str => sceneName.includes(str.toLowerCase()))) {
+                // this.log("debug", `Scene [${sceneName}] checking against ${roles.join("/")}`)
+                return roles.some(r => r.toLowerCase().includes("stat"));
+            }
+            if (["Obs", "Game"].some(str => sceneName.toLowerCase().includes(str.toLowerCase()))) {
+                // this.log("debug", `Scene [${sceneName}] checking against ${roles.join("/")}`)
+                return sceneName.includes(this.states.get("staff_observer_number").toString())
+            }
         }
 
         this.socket.onAny((event, data) => {
@@ -254,9 +269,9 @@ class instance extends InstanceBase {
             this.setState("producer_program_scene", programScene)
             this.setState("producer_preview_scene", previewScene)
 
-            if (sceneTargetsMe(this.states.get("staff_observer_number"), programScene)) {
+            if (sceneTargetsMyRoles(programScene)) {
                 this.setState("observer_tally", "program")
-            } else if (sceneTargetsMe(this.states.get("staff_observer_number"), previewScene)) {
+            } else if (sceneTargetsMyRoles(previewScene)) {
                 this.setState("observer_tally", "preview")
             } else {
                 this.setState("observer_tally", "inactive")
@@ -578,14 +593,16 @@ class instance extends InstanceBase {
     async generateRelationships(match) {
         // need to get match.player_relationships and rel.staff
         if (!match?.player_relationships) {
-            ["observer", "lobby_admin", "producer", "observer_director"].forEach(role => {
+            ["producer", "observer", "lobby_admin", "observer_director", "replay_producer", "stats_producer"].forEach(role => {
                 [0,1,2,3,4,5].forEach((i) => {
                     let stateKey = `staff_${role}`;
                     this.setState(stateKey + "_" + (i+1), ""); // name
                     this.setState(stateKey + "_" + (i+1) + "_code", ""); // code
+                    this.setState(stateKey + "_" + (i+1) + "_id", ""); // id
                     if (i === 0) {
                         this.setState(stateKey, "");
                         this.setState(stateKey + "_code", "");
+                        this.setState(stateKey + "_id", "");
                     }
                 });
             })
@@ -594,28 +611,41 @@ class instance extends InstanceBase {
         let rels = {};
 
         let obsCount = 0;
+        let clientStaffRoles = [];
+
         for (const relID of match.player_relationships) {
             let relationship = await this.getData(relID);
             if (relationship) {
-                if (relationship.singular_name === "Observer") obsCount++;
-                let staff = await this.getData(relationship.player?.[0])
-                if (!staff) return;
-
-                // console.log("Player relationships set", relationship, staff);
-
-                if (staff.id === this.states.get("client_staff")) {
-                    // this staff = correct client?
-                    this.setState("staff_observer_number", obsCount);
+                const thisPlayer = relationship.player?.[0] === this.states.get("client_staff");
+                if (thisPlayer) {
+                    clientStaffRoles.push(relationship.singular_name)
                 }
 
-                if (!rels[relationship.singular_name]) { rels[relationship.singular_name] = []; }
-                rels[relationship.singular_name].push({
-                    ...relationship,
-                    player: staff
-                });
+                let staff = await this.getData(relationship.player?.[0])
+                if (relationship.singular_name === "Observer") obsCount++;
+
+                if (staff) {
+
+                    // console.log("Player relationships set", relationship, staff);
+
+                    if (staff.id === this.states.get("client_staff")) {
+                        // this staff = correct client?
+                        this.setState("staff_observer_number", obsCount);
+                    }
+
+                    if (!rels[relationship.singular_name]) {
+                        rels[relationship.singular_name] = [];
+                    }
+                    rels[relationship.singular_name].push({
+                        ...relationship,
+                        player: staff
+                    });
+                }
 
             }
         }
+
+        this.setState("client_staff_roles", JSON.stringify(clientStaffRoles));
 
         Object.entries(rels).forEach(([singularName, relationships]) => {
             [0,1,2,3,4,5].forEach((i) => {
@@ -625,19 +655,24 @@ class instance extends InstanceBase {
                 if (rel?.player?.name) {
                     const name = rel.player.short ? rel.player.short?.[0] : rel.player.name
                     const code = rel.player?.client_key || rel.player.name.toLowerCase();
+                    const playerID = rel.player?.id || "";
 
                     this.setState(stateKey + "_" + (i+1), name)
                     this.setState(stateKey + "_" + (i+1)+ "_code", code);
+                    this.setState(stateKey + "_" + (i+1)+ "_id", playerID);
                     if (i === 0) {
                         this.setState(stateKey, name)
                         this.setState(stateKey + "_code", code)
+                        this.setState(stateKey + "_id", playerID);
                     }
                 } else {
                     this.setState(stateKey + "_" + (i+1), "");
                     this.setState(stateKey + "_" + (i+1) + "_code", "");
+                    this.setState(stateKey + "_" + (i+1)+ "_id", "");
                     if (i === 0) {
                         this.setState(stateKey, "");
                         this.setState(stateKey + "_code", "");
+                        this.setState(stateKey + "_id", "");
                     }
                 }
             })

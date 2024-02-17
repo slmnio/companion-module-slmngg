@@ -9,6 +9,7 @@ exports.updateVariableDefinitions = function () {
 	variables.push({ variableId: "client_name", name: "Production client name" })
 	variables.push({ variableId: "client_id", name: "Production client ID" })
 	variables.push({ variableId: "client_staff", name: "Production client staff record ID" })
+	variables.push({ variableId: "client_staff_roles", name: "Production client staff match roles" })
 	variables.push({ variableId: "broadcast_key", name: "Broadcast key" })
 	variables.push({ variableId: "broadcast_name", name: "Broadcast name" })
 	variables.push({ variableId: "broadcast_relative_name", name: "Broadcast relative name" })
@@ -55,12 +56,14 @@ exports.updateVariableDefinitions = function () {
 		variables.push({ variableId: `staff_observer_${num}_code`, name: `Observer ${num} Code` })
 	});
 
-	variables.push({ variableId: `staff_observer_number`, name: `Observer Number`, description: `Observer number for the currently connected client` });
+	(["producer", "observer", "lobby_admin", "observer_director", "replay_producer", "stats_producer"]).forEach(key => {
+		variables.push({ variableId: `staff_${key}`, name: `Staff name: ${key}` });
+		variables.push({ variableId: `staff_${key}_code`, name: `Staff code: ${key}` });
+		variables.push({ variableId: `staff_${key}_id`, name: `Staff ID: ${key}` });
+	});
 
-	variables.push({ variableId: `staff_producer`, name: `Producer Name`, description: `Name for the producer from match player relationships` });
-	variables.push({ variableId: `staff_lobby_admin`, name: `Lobby Admin Name`, description: `Name for the lobby admin from match player relationships` });
-	variables.push({ variableId: `staff_observer_director`, name: `Observer Director Name`, description: `Name for the observer director from match player relationships` });
-	variables.push({ variableId: `observer_tally`, name: `Observer Tally Status`, description: `Name for the observer director from match player relationships` });
+	variables.push({ variableId: `staff_observer_number`, name: `Observer Number`, description: `Observer number for the currently connected client` });
+	variables.push({ variableId: `observer_tally`, name: `Observer Tally Status` });
 
 	variables.push({ variableId: `prediction_last`, name: `Last Prediction Action`, description: `Last sent prediction action` });
 
