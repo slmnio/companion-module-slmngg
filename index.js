@@ -48,7 +48,13 @@ class instance extends InstanceBase {
 
             // console.log(JSON.stringify({ end, endTime, diff }))
             if (end && endTime) {
-                if (diff > 0) {
+                if (diff > 60 * 60) {
+                    this.setState("broadcast_countdown_seconds", diff);
+                    let [hours, mins, secs] = [Math.floor(diff / (60 * 60)), Math.floor(diff / 60) % 60, diff % 60].map(n => n.toString())
+                    this.setState("broadcast_countdown_seconds_text", [hours, mins.padStart(2, "0")].join("h"));
+                    this.setState("broadcast_countdown_active", true);
+                    this.setState("broadcast_countdown_needs_clear", false);
+                } else if (diff > 0) {
                     this.setState("broadcast_countdown_seconds", diff);
                     let [mins, secs] = [Math.floor(diff / 60), diff % 60].map(n => n.toString().padStart(2, "0"))
                     this.setState("broadcast_countdown_seconds_text", [mins, secs].join(":"));
@@ -238,6 +244,7 @@ class instance extends InstanceBase {
         })
 
         const sceneTargetsMyRoles = (sceneName) => {
+            if (!sceneName) return false;
             const roles = JSON.parse(this.states.get("client_staff_roles") || "[]");
 
             if (sceneName.toLowerCase().includes("replay")) {

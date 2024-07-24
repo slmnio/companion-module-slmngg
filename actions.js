@@ -113,13 +113,11 @@ module.exports = {
                     type: 'textinput', useVariables: true,
                     label: 'Event',
                     id: 'event',
-                    default: 'create',
                 },
                 {
                     type: 'textinput', useVariables: true,
                     label: 'Data',
                     id: 'data',
-                    default: 'create',
                 },
             ],
             async callback({ options }, { parseVariablesInString }) {
