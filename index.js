@@ -259,8 +259,8 @@ class instance extends InstanceBase {
                 // this.log("debug", `Scene [${sceneName}] checking against ${roles.join("/")}`)
                 return roles.some(r => r.toLowerCase().includes("stat"));
             }
-            const observerNumber = this.states.get("staff_observer_number").toString();
-            if (["Obs", "Game"].some(str => sceneName.toLowerCase().includes(str.toLowerCase())) && observerNumber !== "") {
+            const observerNumber = (this.states.get("staff_observer_number"))?.toString();
+            if (observerNumber && ["Obs", "Game"].some(str => sceneName.toLowerCase().includes(str.toLowerCase())) && observerNumber !== "") {
                 // this.log("debug", `Scene [${sceneName}] checking against ${roles.join("/")}`)
                 return sceneName.includes(observerNumber)
             }
