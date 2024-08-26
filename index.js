@@ -666,23 +666,28 @@ class instance extends InstanceBase {
                     const name = rel.player.short ? rel.player.short?.[0] : rel.player.name
                     const code = rel.player?.client_key || rel.player.name.toLowerCase();
                     const playerID = rel.player?.id || "";
+                    const remoteFeed = rel.player?.remote_feed;
 
                     this.setState(stateKey + "_" + (i+1), name)
                     this.setState(stateKey + "_" + (i+1)+ "_code", code);
                     this.setState(stateKey + "_" + (i+1)+ "_id", playerID);
+                    this.setState(stateKey + "_" + (i+1)+ "_remote_feed", remoteFeed);
                     if (i === 0) {
                         this.setState(stateKey, name)
                         this.setState(stateKey + "_code", code)
                         this.setState(stateKey + "_id", playerID);
+                        this.setState(stateKey + "_remote_feed", remoteFeed);
                     }
                 } else {
                     this.setState(stateKey + "_" + (i+1), "");
                     this.setState(stateKey + "_" + (i+1) + "_code", "");
                     this.setState(stateKey + "_" + (i+1)+ "_id", "");
+                    this.setState(stateKey + "_" + (i+1)+ "_remote_feed", "");
                     if (i === 0) {
                         this.setState(stateKey, "");
                         this.setState(stateKey + "_code", "");
                         this.setState(stateKey + "_id", "");
+                        this.setState(stateKey + "_remote_feed", "");
                     }
                 }
             })

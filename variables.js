@@ -54,12 +54,14 @@ exports.updateVariableDefinitions = function () {
 	([1,2,3,4,5,6]).forEach(num => {
 		variables.push({ variableId: `staff_observer_${num}`, name: `Observer ${num} Name`, description: `Name for observer ${num} from match player relationships` })
 		variables.push({ variableId: `staff_observer_${num}_code`, name: `Observer ${num} Code` })
+		variables.push({ variableId: `staff_observer_${num}_remote_feed`, name: `Observer ${num} Remote Feed` })
 	});
 
 	(["producer", "observer", "lobby_admin", "observer_director", "replay_producer", "stats_producer"]).forEach(key => {
 		variables.push({ variableId: `staff_${key}`, name: `Staff name: ${key}` });
 		variables.push({ variableId: `staff_${key}_code`, name: `Staff code: ${key}` });
 		variables.push({ variableId: `staff_${key}_id`, name: `Staff ID: ${key}` });
+		variables.push({ variableId: `staff_${key}_remote_feed`, name: `Staff Remote Feed: ${key}` });
 	});
 
 	variables.push({ variableId: `staff_observer_number`, name: `Observer Number`, description: `Observer number for the currently connected client` });
