@@ -388,6 +388,7 @@ class instance extends InstanceBase {
             return [
                 "broadcast_key",
                 "broadcast_name",
+                "broadcast_title",
                 "broadcast_relative_name",
                 "broadcast_countdown_end",
                 "broadcast_map_attack",
@@ -409,6 +410,7 @@ class instance extends InstanceBase {
 
         this.setState("broadcast_name", broadcast.name);
         this.setState("broadcast_relative_name", broadcast.relative_name);
+        this.setState("broadcast_title", broadcast.title)
 
         this.setState("broadcast_countdown_end", broadcast.countdown_end);
         this.setState("broadcast_map_attack", broadcast.map_attack);
