@@ -14,6 +14,7 @@ exports.updateVariableDefinitions = function () {
 	variables.push({ variableId: "broadcast_name", name: "Broadcast name" })
 	variables.push({ variableId: "broadcast_relative_name", name: "Broadcast relative name" })
 	variables.push({ variableId: "broadcast_live_text_channel_id", name: "Broadcast live Discord text channel ID" })
+	variables.push({ variableId: "broadcast_title", name: "Broadcast title (Break text)"})
 
 	variables.push({ variableId: "broadcast_event_name", name: "Broadcast event name" })
 	variables.push({ variableId: "broadcast_event_short", name: "Broadcast event short name" })
