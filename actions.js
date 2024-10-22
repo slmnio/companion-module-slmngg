@@ -391,6 +391,22 @@ module.exports = {
                 })
             }
         })
+        addAction("set_break_text", {
+            name: "Set Break Text",
+            options: [
+                {
+                    type: "textinput",
+                    useVariables: true,
+                    id: "text",
+                    label: "Break text",
+                },
+            ],
+            description: "Set the text shown during breaks",
+            async callback({ options }, { parseVariablesInString }) {
+                const text = await parseVariablesInString(options.text)
+                return instance.sendAction("update-broadcast", { title: text || ""})
+            }
+        })
         addAction("set_gfx_index", {
             name: "Set GFX Index",
             description: "",
