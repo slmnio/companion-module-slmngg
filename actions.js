@@ -338,6 +338,7 @@ module.exports = {
                         { id: "Drafted Maps", label: "Drafted Maps" },
                         { id: "Scoreboard", label: "Scoreboard" },
                         { id: "Scoreboard Bans", label: "Scoreboard Bans" },
+                        { id: "Hero Draft", label: "Hero Draft" },
                         { id: "Hidden", label: "Hidden" },
                         { id: "Interview", label: "Interview" },
                         { id: "Casters", label: "Casters" },
@@ -429,6 +430,28 @@ module.exports = {
                 return instance.sendAction("update-gfx-index", {
                     gfxID, index
                 })
+            }
+        })
+        addAction("generic_action", {
+            name: "Generic Action",
+            description: "Send data for any custom action",
+            options: [
+                {
+                    type: "textinput",
+                    useVariables: true,
+                    id: "actionKey",
+                    label: "Action key",
+                },
+                {
+                    type: 'textinput',
+                    useVariables: true,
+                    label: 'Data (JSON)',
+                    id: 'data',
+                },
+            ],
+            async callback({ options }, { parseVariablesInString }) {
+                const [actionKey, data] = await Promise.all([options.actionKey, options.data].map(t => parseVariablesInString(t)))
+                return instance.sendAction(actionKey, JSON.parse(data))
             }
         })
 
