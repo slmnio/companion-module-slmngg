@@ -23,6 +23,13 @@ class MapObject {
     }
 }
 
+function cleanID(id) {
+  if (!id) return null;
+  if (typeof id !== "string") return id.id || null; // no real id oops
+  if (id.startsWith("rec") && id.length === 17) id = id.slice(3);
+  return id;
+}
+
 class instance extends InstanceBase {
     constructor(internal) {
         super(internal);
@@ -287,7 +294,7 @@ class instance extends InstanceBase {
         })
 
         this.socket.on("action_error", ({action, error, errorCode, errorMessage}) => {
-            this.log("error", `Action error on [${action}]: ${errorCode} - ${errorMessage}`);
+            this.log("error", `Action error on [${action}]: ${errorCode} - ${JSON.stringify(errorMessage)}`);
         })
 
         this.socket.on("error", (error) => this.log("error", `Socket error: ${error.message}`));
@@ -302,6 +309,7 @@ class instance extends InstanceBase {
     }
 
     async getData(id) {
+	if (id?.id) id = id.id;
         if (!id) return null;
         // console.log(`[get]`, id);
         if (id.startsWith("rec")) id = id.slice(3);
@@ -539,7 +547,7 @@ class instance extends InstanceBase {
 
         this.generateTeams(match);
         this.generateRelationships(match);
-
+        this.generateMaps(match);
     }
 
 
@@ -594,6 +602,53 @@ class instance extends InstanceBase {
                     setTeamState("theme_text_on_theme", "")
                     setTeamState("theme_ready", false);
                     this.setState("theme_ready", false)
+                }
+            }
+        }
+
+    }
+
+    async generateMaps(match) {
+      const mapNums = [1,2,3,4,5,6,7,8,9];
+
+      let current = null;
+      console.log("emptying current");
+
+        if (!match?.maps) {
+            // unset team, theme
+
+            ["name"].forEach(key => {
+                mapNums.forEach(mapNum => {
+                    this.setState(`map_${mapNum}_${key}`, "")
+                })
+            })
+        }
+
+        if (!match?.maps?.length) return
+        for (let i = 0; i < match.maps.length; i++){
+            const id = match.maps[i];
+            let map = await this.getData(id);
+
+            let mapNum = i + 1;
+            if (map && map.map?.[0]) {
+                this.setState(`map_${mapNum}_name`, "");
+                let gameMap = await this.getData(map.map?.[0]);
+
+
+                if (!map.winner && !map.draw && !current) {
+                  current = map;
+                  if (current?.name?.[0]) {
+                    this.setState(`current_map_name`, current?.name?.[0]);
+                  }
+                }
+
+                if (gameMap) {
+                  if (gameMap.name) {
+                    this.setState(`map_${mapNum}_name`, gameMap.name);
+                    if (cleanID(current?.id) === cleanID(map.id)) {
+                      this.setState(`current_map_name`, gameMap.name);
+                    }
+                  }
                 }
             }
         }

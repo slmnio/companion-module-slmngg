@@ -402,11 +402,11 @@ exports.initFeedbacks = function () {
 
             if (!type) return {};
 
-            console.log(`https://slmn.io/streamdeck-icons/${type}.png`)
+            // console.log(`https://slmn.io/streamdeck-icons/${type}.png`)
 
             const emptyPixel = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
             const data = await getImageB64(`https://slmn.io/streamdeck-icons/${type}.png`);
-            console.log(data);
+            // console.log(data);
 
             return {
                 png64: (await getImageB64(`https://slmn.io/streamdeck-icons/${type}.png`))

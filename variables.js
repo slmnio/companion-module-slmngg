@@ -52,6 +52,12 @@ exports.updateVariableDefinitions = function () {
 	variables.push({ variableId: "match_right_code", name: "Match right code", description: "Code for the team on the right of the overlay" })
 	variables.push({ variableId: "match_right_score", name: "Match right score", description: "Score for the team on the right of the overlay" });
 
+	variables.push({ variableId: "current_map_name", name: "Current map name", description: "Name of the current map" });
+
+
+	([1,2,3,4,5,6,7,8,9]).forEach(num => {
+    variables.push({ variableId: `map_${num}_name`, name: `Map ${num} name`, description: `Name of map ${num}` });
+	});
 	([1,2,3,4,5,6]).forEach(num => {
 		variables.push({ variableId: `staff_observer_${num}`, name: `Observer ${num} Name`, description: `Name for observer ${num} from match player relationships` })
 		variables.push({ variableId: `staff_observer_${num}_code`, name: `Observer ${num} Code` })
