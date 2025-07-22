@@ -1,6 +1,6 @@
 {
 	"globals": { "angular": false, "module": false, "inject": false, "document": false },
-	"env": { es6: true, browser: true, amd: true, node: true },
+	"env": { "es6": true, "browser": true, "amd": true, "node": true },
 	"extends": [
 		"eslint:recommended"
 	],

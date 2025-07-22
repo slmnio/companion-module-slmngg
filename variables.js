@@ -1,3 +1,7 @@
+function ucFirst(str) {
+    return [str.slice(0, 1).toUpperCase(), str.slice(1)].join("")
+}
+
 exports.updateVariableDefinitions = function () {
 	/**
 	 *
@@ -56,7 +60,7 @@ exports.updateVariableDefinitions = function () {
 
 
 	([1,2,3,4,5,6,7,8,9]).forEach(num => {
-    variables.push({ variableId: `map_${num}_name`, name: `Map ${num} name`, description: `Name of map ${num}` });
+        variables.push({ variableId: `map_${num}_name`, name: `Map ${num} name`, description: `Name of map ${num}` });
 	});
 	([1,2,3,4,5,6]).forEach(num => {
 		variables.push({ variableId: `staff_observer_${num}`, name: `Observer ${num} Name`, description: `Name for observer ${num} from match player relationships` })
@@ -86,10 +90,31 @@ exports.updateVariableDefinitions = function () {
 		})
 	});
 
+    [1,2,3,4,5,6,7,8,9].forEach(num => {
+        ["name", "battletag", "role"].forEach(key => {
+            [1,2].forEach(teamNum => {
+                variables.push({ variableId: `player_team_${teamNum}_player_${num}_${key}`, name: `Rostered Player - T${teamNum} P${num} - ${ucFirst(key)}`, description: `${key} of player ${num} on team ${teamNum}` })
+            });
+            ["left", "right"].forEach(teamSide => {
+                variables.push({ variableId: `player_team_${teamSide}_player_${num}_${key}`, name: `Rostered Player - T${ucFirst(teamSide)} P${num} - ${ucFirst(key)}`, description: `${key} of player ${num} on team ${teamSide}` })
+            })
+        });
+    });
+	[1,2,3,4,5,6].forEach(num => {
+        ["name", "battletag"].forEach(key => {
+            [1,2].forEach(teamNum => {
+                variables.push({ variableId: `player_cam_team_${teamNum}_player_${num}_${key}`, name: `Player Cam - T${teamNum} P${num} - ${ucFirst(key)}`, description: `${key} of player cam for player ${num} on team ${teamNum}` })
+            });
+            ["left", "right"].forEach(teamSide => {
+                variables.push({ variableId: `player_cam_team_${teamSide}_player_${num}_${key}`, name: `Player Cam - T${ucFirst(teamSide)} P${num} - ${ucFirst(key)}`, description: `${key} of player cam for player ${num} on team ${teamSide}` })
+            })
+        });
+    });
+
 	[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24].forEach(num => {
-		variables.push({ variableId: `gfx_${num}_short`, description: `Short descriptor for GFX ${num}` })
-		variables.push({ variableId: `gfx_${num}_type`, description: `Type for GFX ${num}` })
-		variables.push({ variableId: `gfx_${num}_id`, description: `ID for GFX ${num}` })
+		variables.push({ variableId: `gfx_${num}_short`, name: `GFX ${num} Short`, description: `Short descriptor for GFX ${num}` })
+		variables.push({ variableId: `gfx_${num}_type`, name: `GFX ${num} Type`, description: `Type for GFX ${num}` })
+		variables.push({ variableId: `gfx_${num}_id`, name: `GFX ${num} ID`, description: `ID for GFX ${num}` })
 	});
 
 	// variables.push({ variableId: 'base_resolution', name: 'Current base (canvas) resolution' })
