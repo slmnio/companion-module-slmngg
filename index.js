@@ -280,6 +280,7 @@ class instance extends InstanceBase {
         });
 
         this.socket.on("prod_preview_program_change", (data) => {
+            // TODO: this needs to update with the new obs director stuff
             console.log("prod_preview", data);
             const { broadcastKey, previewScene, programScene } = data;
 
@@ -327,10 +328,28 @@ class instance extends InstanceBase {
         // console.log(new Date().toISOString(), "subscriptions", [...this.slmnggCache.keys()])
         // generate any data we could want here
 
+        const streams = (await this.getData(`special:streams`))?.streams;
+
         if (await this.getData(`client-${this.config.clientKey}`)) {
             let client = this.slmnggCache.get(`client-${this.config.clientKey}`);
             this.generateClient(client);
             // console.log(new Date().toISOString(), "gen:client-broadcasts", client.broadcast)
+
+            this.setState(`client_stream_delay`, 0);
+            this.setState(`client_stream_delay`, 0);
+            if (client?.key && streams?.length) {
+                // find our stream from transmitters
+                const myStreams = streams.filter(s => s.clientName === client?.key);
+                // client_stream_delay
+                const delay = myStreams.find(s => s?.settings?.stream_delay_enabled && s?.settings?.stream_delay_seconds)?.settings?.stream_delay_seconds;
+                console.log("streams", myStreams.find(s => s?.settings?.stream_delay_enabled && s?.settings?.stream_delay_seconds));
+                console.log(delay);
+                if (delay !== undefined) {
+                    this.setState(`client_stream_delay`, parseInt(delay));
+                    this.setState(`client_stream_delay_ms`, parseInt(delay) * 1000);
+                }
+            }
+
             if (client.broadcast?.length) { // client.broadcast = object[]
                 let broadcastID = client.broadcast[0];
                 let broadcast = await this.getData(broadcastID);
@@ -644,7 +663,7 @@ class instance extends InstanceBase {
                         const player = await this.getData(playerID);
 
                         if (player) {
-                            console.log(player);
+                            // console.log(player);
                             setPlayerState("id", player.id)
                             setPlayerState("name", player.name)
                             setPlayerState("role", player.role)

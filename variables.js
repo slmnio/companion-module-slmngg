@@ -14,6 +14,10 @@ exports.updateVariableDefinitions = function () {
 	variables.push({ variableId: "client_id", name: "Production client ID" })
 	variables.push({ variableId: "client_staff", name: "Production client staff record ID" })
 	variables.push({ variableId: "client_staff_roles", name: "Production client staff match roles" })
+	variables.push({ variableId: "client_stream_delay", name: "Stream delay reported by client's transmitter in seconds" })
+	variables.push({ variableId: "client_stream_delay_ms", name: "Stream delay reported by client's transmitter in milliseconds" })
+
+
 	variables.push({ variableId: "broadcast_key", name: "Broadcast key" })
 	variables.push({ variableId: "broadcast_name", name: "Broadcast name" })
 	variables.push({ variableId: "broadcast_relative_name", name: "Broadcast relative name" })
