@@ -125,6 +125,32 @@ module.exports = {
                 return instance.socket.emit("prod_trigger", event, data);
             }
         })
+        addAction("pip_announce", {
+            name: "PiP (Picture in picture) announce",
+            options: [
+                {
+                    type: 'checkbox',
+                    label: 'Active',
+                    id: 'active',
+                    default: true,
+                },
+                {
+                    type: 'number',
+                    useVariables: true,
+                    label: 'Observer Number',
+                    id: 'number',
+                    default: 1
+                },
+            ],
+            async callback({ options }, { parseVariablesInString }) {
+                const [active, number] = await Promise.all([options.active, options.number].map(t => parseVariablesInString(t)))
+                return instance.socket.emit("pip_announce", {
+                    clientName: instance.states.get("client_key"),
+                    active,
+                    number
+                });
+            }
+        })
         addAction("set_title", {
             name: "Set Automatic Twitch Title",
             options: [],
