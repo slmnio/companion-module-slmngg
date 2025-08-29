@@ -17,6 +17,8 @@ exports.updateVariableDefinitions = function () {
 	variables.push({ variableId: "client_stream_delay", name: "Stream delay reported by client's transmitter in seconds" })
 	variables.push({ variableId: "client_stream_delay_ms", name: "Stream delay reported by client's transmitter in milliseconds" })
 
+	variables.push({ variableId: "new_version_available", name: "New version available" })
+
 
 	variables.push({ variableId: "broadcast_key", name: "Broadcast key" })
 	variables.push({ variableId: "broadcast_name", name: "Broadcast name" })
