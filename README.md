@@ -6,28 +6,9 @@ This module gives you control of [SLMN.GG](https://github.com/slmnio/slmngg-sfc)
 
 ### Preparing Companion
 
-- Install [Companion v3](https://user.bitfocus.io/download). You should make sure that any modules you require for production have also been updated to the new v3 format.
-- Create a folder somewhere in which you will install external modules, including this one
-- Run Companion and press the **developer settings cogwheel** in the top right, which will show the Developer modules path box. Choose your new folder here.
-
-  ![](https://raw.githubusercontent.com/wiki/bitfocus/companion-module-base/images/launcher-developer-mode.png)
-
-You'll now need to download and install this module into a subfolder. You can download the [full-setup.bat](https://github.com/slmnio/companion-module-slmngg/raw/master/full-setup.bat) file into your developer modules folder and run it. Otherwise, you can manually install everything you'll need.
-
-### Manual installation / running the script
-This is just an explanation of what the full setup batch file does. If you know what you're doing, just pull the commands you need from here.
-
-- Open a command prompt window in your developer modules folder. 
-- Install [Git](https://git-scm.com/) to make it easier to download updates:
-  `winget install Git.Git`
-- Download the module code: 
-  `git clone https://github.com/slmnio/companion-module-slmngg`
-- Enter the new downloaded folder
-  `cd companion-module-slmngg`
-- Install Node (v18 or higher). This installer uses the [v18 LTS](https://nodejs.org/en/blog/release/v18.12.0) version.
-  `winget install OpenJS.NodeJS.LTS`
-- Install dependencies
-  `npm install`
+- Install [Companion v4](https://user.bitfocus.io/download).
+- Go to the latest [release](https://github.com/slmnio/companion-module-slmngg/releases/latest) and download the `slmngg-controller-X.X.X.tgz` file.
+- Open Companion and go to the [**Modules**](http://localhost:8000/modules) tab. Press the **Import module package** button and select the downloaded file.
 
 ### Operating with SLMN.GG
 
@@ -56,6 +37,7 @@ The features we add get extensively tested in our productions, so you should fin
 
 # Getting updates
 
-We will keep pushing updates to this repository as new features get added. You can run the **update.bat** script in your module folder to get new updates and install any new dependencies.
+There's a variable `new_version_available` which will indicate if there's a new version of the module available.
+You can then follow the setup instructions again to download the latest version.
 
 

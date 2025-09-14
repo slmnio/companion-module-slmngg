@@ -5,6 +5,8 @@ const { updateVariableDefinitions } = require("./variables");
 
 const { io } = require("socket.io-client");
 const { InstanceBase, InstanceStatus, runEntrypoint } = require("@companion-module/base");
+const { compare } = require("compare-versions");
+const pkg = require("./package.json");
 
 
 class MapObject {
@@ -91,6 +93,16 @@ class instance extends InstanceBase {
 
         await this.connectDataServer();
         this.updateEverything();
+
+        // Version check now and periodically
+        try {
+            await this.checkForNewVersion();
+        } catch (err) {
+            this.log("debug", `Version check failed: ${err?.message || err}`);
+        }
+        this.timerVersionCheck = setInterval(() => {
+            this.checkForNewVersion().catch((err) => this.log("debug", `Scheduled version check failed: ${err?.message || err}`));
+        }, 10 * 60 * 1000);
     }
 
     setState(key, val) {
@@ -202,6 +214,9 @@ class instance extends InstanceBase {
         }
         if (this.timerTick) {
             clearInterval(this.timerTick);
+        }
+        if (this.timerVersionCheck) {
+            clearInterval(this.timerVersionCheck);
         }
     }
 
@@ -390,6 +405,24 @@ class instance extends InstanceBase {
             this.generateBroadcast();
             this.generateMatch();
         }
+    }
+
+    /**
+     * Check GitHub releases to see if a newer version is available than package.json version
+     */
+    async checkForNewVersion() {
+        const res = await fetch("https://ungh.cc/repos/slmnio/companion-module-slmngg/releases/latest");
+        if (!res.ok) {
+            throw new Error(`GitHub API responded ${res.status}`);
+        }
+        const json = await res.json();
+        const latestVersion = json.release.tag.replace(/^v/i, "");
+        if (!latestVersion) {
+            this.setState("new_version_available", false);
+            return;
+        }
+        const isNewer = compare(latestVersion, pkg.version, ">");
+        this.setState("new_version_available", !!isNewer);
     }
 
     generateClient(client) {

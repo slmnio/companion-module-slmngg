@@ -5,8 +5,8 @@
 	"description": "Control SLMN.GG from Companion",
 	"version": "0.0.0",
 	"license": "ISC",
-	"repository": "https://github.com/bitfocus/companion-module-slmngg-controller.git",
-	"bugs": "https://github.com/bitfocus/companion-module-slmngg-controller/issues",
+	"repository": "https://github.com/slmnio/companion-module-slmngg.git",
+	"bugs": "https://github.com/slmnio/companion-module-slmngg/issues",
 	"maintainers": [
 		{
 			"name": "SLMN"
@@ -14,7 +14,7 @@
 	],
 	"legacyIds": [],
 	"runtime": {
-		"type": "node18",
+		"type": "node22",
 		"api": "nodejs-ipc",
 		"apiVersion": "0.0.0",
 		"entrypoint": "..\\index.js"
