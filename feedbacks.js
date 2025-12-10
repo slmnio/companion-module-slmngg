@@ -438,5 +438,37 @@ exports.initFeedbacks = function () {
         }
     })
 
+
+
+    addFeedback("gfx_type", {
+        name: "GFX type icon",
+        check: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24].map(num => `gfx_${num}_type`),
+        options: [
+            {
+                type: "textinput",
+                useVariables: true,
+                id: "index",
+                label: "Index",
+            }
+        ],
+        callback: async ({ options }, { parseVariablesInString }) => {
+            const index = await parseVariablesInString(options.index)
+            const type = this.states.get(`gfx_${index}_type`);
+
+            if (!type) return {};
+
+            // console.log(`https://slmn.io/streamdeck-icons/${type}.png`)
+
+            const emptyPixel = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+            const data = await getImageB64(`https://slmn.io/streamdeck-icons/${type}.png`);
+            // console.log(data);
+
+            return {
+                png64: (await getImageB64(`https://slmn.io/streamdeck-icons/${type}.png`))
+            }
+        }
+    })
+
+
     return feedbacks;
 }

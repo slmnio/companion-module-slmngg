@@ -265,14 +265,21 @@ module.exports = {
             options: [
                 {
                     type: 'number',
-                    label: 'Countdown length (seconds)',
+                    label: 'Countdown length (number, seconds)',
                     id: 'seconds',
-                    default: 180,
+                    default: 180
+                },
+                {
+                    type: 'textinput',
+                    label: 'Countdown length (variable, seconds)',
+                    id: 'variable',
+                    useVariables: true
                 },
             ],
-            async callback({ options }) {
-                await instance.sendAction("update-broadcast", { countdownEnd: (new Date()).getTime() + (options.seconds * 1000)  });
-                this.setState("broadcast_countdown_seconds", options.seconds);
+            async callback({ options }, { parseVariablesInString }) {
+                const seconds = parseInt(await parseVariablesInString(options.variable)) || options.seconds;
+                await instance.sendAction("update-broadcast", { countdownEnd: (new Date()).getTime() + (seconds * 1000)  });
+                this.setState("broadcast_countdown_seconds", seconds);
                 this.setState("broadcast_countdown_active", true);
             }
         })
@@ -362,6 +369,7 @@ module.exports = {
                         { id: "Predictions", label: "Predictions" },
                         { id: "Maps", label: "Maps" },
                         { id: "Drafted Maps", label: "Drafted Maps" },
+                        { id: "Drafted Maps (Reveal)", label: "Drafted Maps (Reveal)" },
                         { id: "Scoreboard", label: "Scoreboard" },
                         { id: "Scoreboard Bans", label: "Scoreboard Bans" },
                         { id: "Hero Draft", label: "Hero Draft" },

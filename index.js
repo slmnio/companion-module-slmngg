@@ -329,7 +329,7 @@ class instance extends InstanceBase {
     async getData(id) {
         if (id?.id) id = id.id;
         if (!id) return null;
-        // console.log(`[get]`, id);
+        if (typeof id === "object" && !id?.id) return null;
         if (id.startsWith("rec")) id = id.slice(3);
         if (this.slmnggCache.has(id)) return this.slmnggCache.get(id);
         // console.log(new Date().toISOString(), "Get and subscribe:", id);
