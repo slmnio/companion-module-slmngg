@@ -758,6 +758,10 @@ class instance extends InstanceBase {
                 this.setState(`map_${mapNum}_name`, "");
                 let gameMap = await this.getData(map.map?.[0]);
 
+                if (map.winner || map.draw) {
+                    this.setState(`last_finished_map_id`, id)
+                }
+
 
                 if (!map.winner && !map.draw && !current) {
                     current = map;
