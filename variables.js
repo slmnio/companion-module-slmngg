@@ -63,7 +63,7 @@ exports.updateVariableDefinitions = function () {
 	variables.push({ variableId: "match_right_score", name: "Match right score", description: "Score for the team on the right of the overlay" });
 
 	variables.push({ variableId: "current_map_name", name: "Current map name", description: "Name of the current map" });
-
+	variables.push({ variableId: "last_finished_map_id", name: "Last finished map ID", description: "slmngg ID of the last finished map"});
 
 	([1,2,3,4,5,6,7,8,9]).forEach(num => {
         variables.push({ variableId: `map_${num}_name`, name: `Map ${num} name`, description: `Name of map ${num}` });

@@ -741,6 +741,8 @@ class instance extends InstanceBase {
         if (!match?.maps) {
             // unset team, theme
 
+            this.setState(`last_finished_map_id`, "");
+
             ["name"].forEach(key => {
                 mapNums.forEach(mapNum => {
                     this.setState(`map_${mapNum}_${key}`, "");
@@ -757,6 +759,10 @@ class instance extends InstanceBase {
             if (map && map.map?.[0]) {
                 this.setState(`map_${mapNum}_name`, "");
                 let gameMap = await this.getData(map.map?.[0]);
+
+                if (map.winner || map.draw) {
+                    this.setState(`last_finished_map_id`, id)
+                }
 
 
                 if (!map.winner && !map.draw && !current) {
