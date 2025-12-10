@@ -741,6 +741,8 @@ class instance extends InstanceBase {
         if (!match?.maps) {
             // unset team, theme
 
+            this.setState(`last_finished_map_id`, "");
+
             ["name"].forEach(key => {
                 mapNums.forEach(mapNum => {
                     this.setState(`map_${mapNum}_${key}`, "");
