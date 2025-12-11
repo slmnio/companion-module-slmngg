@@ -15,7 +15,7 @@ module.exports = {
             actions[key] = {
                 ...action,
                 key
-            }
+            };
         }
 
         addAction("toggle_cams", {
@@ -25,14 +25,14 @@ module.exports = {
             async callback() {
                 return instance.sendAction("update-broadcast", { playerCams: !instance.states.get("broadcast_show_cams") });
             }
-        })
+        });
         addAction("toggle_flip_teams", {
             name: "Flip Teams",
             options: [],
             async callback() {
                 return instance.sendAction("toggle-flip-teams");
             }
-        })
+        });
         addAction("prediction_create", {
             name: "Create Match Prediction",
             options: [
@@ -44,11 +44,15 @@ module.exports = {
                 }
             ],
             async callback({ options }) {
-                instance.setState("prediction_last", "create")
-                instance.setState("prediction_type", "match")
-                return instance.sendAction("manage-prediction", { predictionType: "match", predictionAction: "create", "autoLockAfter": options.timer || 300  });
+                instance.setState("prediction_last", "create");
+                instance.setState("prediction_type", "match");
+                return instance.sendAction("manage-prediction", {
+                    predictionType: "match",
+                    predictionAction: "create",
+                    "autoLockAfter": options.timer || 300
+                });
             }
-        })
+        });
         addAction("prediction_create_map", {
             name: "Create Map Prediction",
             options: [
@@ -60,97 +64,101 @@ module.exports = {
                 }
             ],
             async callback({ options }) {
-                instance.setState("prediction_last", "create")
-                instance.setState("prediction_type", "map")
-                return instance.sendAction("manage-prediction", { predictionType: "map", predictionAction: "create", "autoLockAfter": options.timer || 180 });
+                instance.setState("prediction_last", "create");
+                instance.setState("prediction_type", "map");
+                return instance.sendAction("manage-prediction", {
+                    predictionType: "map",
+                    predictionAction: "create",
+                    "autoLockAfter": options.timer || 180
+                });
             }
-        })
+        });
         addAction("prediction_lock", {
             name: "Lock Prediction",
             options: [],
             async callback() {
-                instance.setState("prediction_last", "lock")
+                instance.setState("prediction_last", "lock");
                 return instance.sendAction("manage-prediction", { predictionAction: "lock" });
             }
-        })
+        });
         addAction("prediction_resolve", {
             name: "Resolve Prediction",
             options: [],
             async callback() {
-                instance.setState("prediction_last", "resolve")
+                instance.setState("prediction_last", "resolve");
                 return instance.sendAction("manage-prediction", { predictionAction: "resolve" });
             }
-        })
+        });
         addAction("prediction_cancel", {
             name: "Cancel Prediction",
             options: [],
             async callback() {
-                instance.setState("prediction_last", "cancel")
+                instance.setState("prediction_last", "cancel");
                 return instance.sendAction("manage-prediction", { predictionAction: "cancel" });
             }
-        })
+        });
         addAction("prediction_manage", {
             name: "Manage Prediction",
             options: [
                 {
-                    type: 'textinput', useVariables: true,
-                    label: 'Action',
-                    id: 'action',
-                    default: 'create',
-                },
+                    type: "textinput", useVariables: true,
+                    label: "Action",
+                    id: "action",
+                    default: "create"
+                }
             ],
             async callback({ options }, { parseVariablesInString }) {
                 const action = await parseVariablesInString(options.action);
-                if (!["create", "lock", "resolve", "cancel"].includes(action)) return instance.log("error", `Option ${action} is unknown`)
-                instance.setState("prediction_last", action)
+                if (!["create", "lock", "resolve", "cancel"].includes(action)) return instance.log("error", `Option ${action} is unknown`);
+                instance.setState("prediction_last", action);
                 return instance.sendAction("manage-prediction", { predictionAction: action });
             }
-        })
+        });
         addAction("prod_trigger", {
             name: "Prod Trigger",
             options: [
                 {
-                    type: 'textinput', useVariables: true,
-                    label: 'Event',
-                    id: 'event',
+                    type: "textinput", useVariables: true,
+                    label: "Event",
+                    id: "event"
                 },
                 {
-                    type: 'textinput', useVariables: true,
-                    label: 'Data',
-                    id: 'data',
-                },
+                    type: "textinput", useVariables: true,
+                    label: "Data",
+                    id: "data"
+                }
             ],
             async callback({ options }, { parseVariablesInString }) {
-                const [event, data] = await Promise.all([options.event, options.data].map(t => parseVariablesInString(t)))
+                const [event, data] = await Promise.all([options.event, options.data].map(t => parseVariablesInString(t)));
                 return instance.socket.emit("prod_trigger", event, data);
             }
-        })
+        });
         addAction("pip_announce", {
             name: "PiP (Picture in picture) announce",
             options: [
                 {
-                    type: 'checkbox',
-                    label: 'Active',
-                    id: 'active',
-                    default: true,
+                    type: "checkbox",
+                    label: "Active",
+                    id: "active",
+                    default: true
                 },
                 {
-                    type: 'number',
+                    type: "number",
                     useVariables: true,
-                    label: 'Observer Number',
-                    id: 'number',
+                    label: "Observer Number",
+                    id: "number",
                     default: 1
-                },
+                }
             ],
             async callback({ options }, { parseVariablesInString }) {
-                const [active, number] = await Promise.all([options.active, options.number].map(t => parseVariablesInString(t)))
+                const [active, number] = await Promise.all([options.active, options.number].map(t => parseVariablesInString(t)));
                 return instance.socket.emit("pip_announce", {
                     clientName: instance.states.get("client_key"),
                     active,
                     number
                 });
             }
-        })
+        });
         addAction("set_title", {
             name: "Set Automatic Twitch Title",
             options: [],
@@ -158,33 +166,33 @@ module.exports = {
             async callback() {
                 return instance.sendAction("set-title");
             }
-        })
+        });
 
         addAction("set_map_attack", {
             name: "Set Map Attack",
             options: [
                 {
-                    type: 'textinput', useVariables: true,
-                    label: 'Side',
-                    id: 'side',
-                    default: 'Left',
-                },
+                    type: "textinput", useVariables: true,
+                    label: "Side",
+                    id: "side",
+                    default: "Left"
+                }
             ],
             async callback({ options }, { parseVariablesInString }) {
                 let side = await parseVariablesInString(options.side);
                 if (side === "") side = null;
-                return instance.sendAction("update-broadcast", { mapAttack: side })
+                return instance.sendAction("update-broadcast", { mapAttack: side });
             }
-        })
+        });
         addAction("toggle_map_attack", {
             name: "Toggle Map Attack",
             options: [
                 {
-                    type: 'checkbox',
-                    label: 'Toggle Through Empty?',
-                    id: 'useNull',
-                    default: false,
-                },
+                    type: "checkbox",
+                    label: "Toggle Through Empty?",
+                    id: "useNull",
+                    default: false
+                }
             ],
             async callback({ options }) {
                 let side = "Right";
@@ -192,106 +200,106 @@ module.exports = {
                 if (options.useNull && instance.states.get("broadcast_map_attack") === "Left") side = null;
                 return instance.sendAction("update-broadcast", { mapAttack: side });
             }
-        })
+        });
         addAction("set_nudge_clear_countdown", {
             name: "Set/Nudge/Clear Countdown",
             options: [
                 {
-                    type: 'number',
-                    label: 'Countdown length (seconds)',
-                    id: 'seconds',
-                    default: 180,
+                    type: "number",
+                    label: "Countdown length (seconds)",
+                    id: "seconds",
+                    default: 180
                 },
                 {
-                    type: 'number',
-                    label: 'Additional time when re-pressed',
-                    id: 'additionalSeconds',
-                    default: 120,
-                },
+                    type: "number",
+                    label: "Additional time when re-pressed",
+                    id: "additionalSeconds",
+                    default: 120
+                }
             ],
             async callback({ options }) {
                 if (instance.states.get("broadcast_countdown_needs_clear")) {
                     // clear
-                    await instance.sendAction("update-broadcast", { countdownEnd: null  });
+                    await instance.sendAction("update-broadcast", { countdownEnd: null });
                     instance.setState("broadcast_countdown_active", false);
                     instance.setState("broadcast_countdown_seconds", -1);
                 } else if (instance.states.get("broadcast_countdown_active")) {
                     // clear
                     const existingTime = new Date(instance.states.get("broadcast_countdown_end"));
                     if (existingTime) {
-                        const targetTime = (new Date(existingTime.getTime() + ((options.additionalSeconds || options.seconds) * 1000))).getTime()
+                        const targetTime = (new Date(existingTime.getTime() + ((options.additionalSeconds || options.seconds) * 1000))).getTime();
                         const targetSeconds = Math.floor((targetTime - (new Date()).getTime()) / 1000);
 
-                        await instance.sendAction("update-broadcast", { countdownEnd: targetTime  });
+                        await instance.sendAction("update-broadcast", { countdownEnd: targetTime });
                         this.setState("broadcast_countdown_seconds", targetSeconds);
                         this.setState("broadcast_countdown_active", true);
                     } else {
-                        await instance.sendAction("update-broadcast", { countdownEnd: (new Date()).getTime() + (options.seconds * 1000)  });
+                        await instance.sendAction("update-broadcast", { countdownEnd: (new Date()).getTime() + (options.seconds * 1000) });
                         this.setState("broadcast_countdown_seconds", options.seconds);
                         this.setState("broadcast_countdown_active", true);
                     }
                 } else {
-                    await instance.sendAction("update-broadcast", { countdownEnd: (new Date()).getTime() + (options.seconds * 1000)  });
+                    await instance.sendAction("update-broadcast", { countdownEnd: (new Date()).getTime() + (options.seconds * 1000) });
                     this.setState("broadcast_countdown_seconds", options.seconds);
                     this.setState("broadcast_countdown_active", true);
                 }
             }
-        })
+        });
         addAction("set_or_clear_countdown", {
             name: "Set or Clear Countdown",
             options: [
                 {
-                    type: 'number',
-                    label: 'Countdown length (seconds)',
-                    id: 'seconds',
-                    default: 180,
+                    type: "number",
+                    label: "Countdown length (seconds)",
+                    id: "seconds",
+                    default: 180
                 }
             ],
             async callback({ options }) {
                 if (instance.states.get("broadcast_countdown_active")) {
                     // clear
-                    await instance.sendAction("update-broadcast", { countdownEnd: null  });
+                    await instance.sendAction("update-broadcast", { countdownEnd: null });
                     instance.setState("broadcast_countdown_active", false);
                     instance.setState("broadcast_countdown_seconds", -1);
                 } else {
-                    await instance.sendAction("update-broadcast", { countdownEnd: (new Date()).getTime() + (options.seconds * 1000)  });
+                    await instance.sendAction("update-broadcast", { countdownEnd: (new Date()).getTime() + (options.seconds * 1000) });
                     this.setState("broadcast_countdown_seconds", options.seconds);
                     this.setState("broadcast_countdown_active", true);
                 }
             }
-        })
+        });
         addAction("set_countdown", {
             name: "Set Countdown",
             options: [
                 {
-                    type: 'number',
-                    label: 'Countdown length (number, seconds)',
-                    id: 'seconds',
+                    type: "number",
+                    label: "Countdown length (number, seconds)",
+                    id: "seconds",
                     default: 180
                 },
                 {
-                    type: 'textinput',
-                    label: 'Countdown length (variable, seconds)',
-                    id: 'variable',
+                    type: "textinput",
+                    label: "Countdown length (variable, seconds)",
+                    id: "variable",
                     useVariables: true
-                },
+                }
             ],
             async callback({ options }, { parseVariablesInString }) {
                 const seconds = parseInt(await parseVariablesInString(options.variable)) || options.seconds;
-                await instance.sendAction("update-broadcast", { countdownEnd: (new Date()).getTime() + (seconds * 1000)  });
+                await instance.sendAction("update-broadcast", { countdownEnd: (new Date()).getTime() + (seconds * 1000) });
                 this.setState("broadcast_countdown_seconds", seconds);
                 this.setState("broadcast_countdown_active", true);
             }
-        })
+        });
         addAction("clear_countdown", {
             name: "Clear Countdown",
             options: [],
             async callback() {
-                await instance.sendAction("update-broadcast", { countdownEnd: null  });
+                await instance.sendAction("update-broadcast", { countdownEnd: null });
                 instance.setState("broadcast_countdown_active", false);
                 instance.setState("broadcast_countdown_seconds", -1);
             }
-        })
+        });
 
         addAction("toggle_broadcast_advertise", {
             name: "Toggle Broadcast Advertise",
@@ -300,30 +308,30 @@ module.exports = {
             async callback() {
                 return instance.sendAction("update-broadcast", { advertise: !instance.states.get("broadcast_advertise") });
             }
-        })
+        });
 
         addAction("multi_map_win", {
             name: "Multi Map Win",
             description: "Set map win, match point +1 and optionally unset map attack in one press",
             options: [
                 {
-                    type: 'checkbox',
-                    label: 'Unset Map Attack?',
-                    id: 'unsetMapAttack',
-                    default: false,
+                    type: "checkbox",
+                    label: "Unset Map Attack?",
+                    id: "unsetMapAttack",
+                    default: false
                 },
                 {
-                    type: 'dropdown',
+                    type: "dropdown",
                     choices: [
                         { id: "1", label: "Team 1" },
                         { id: "2", label: "Team 2" },
                         { id: "left", label: "Left team" },
-                        { id: "right", label: "Right team" },
+                        { id: "right", label: "Right team" }
                     ],
-                    label: 'Team Number',
-                    id: 'teamNum',
-                    default: '1',
-                },
+                    label: "Team Number",
+                    id: "teamNum",
+                    default: "1"
+                }
             ],
             async callback({ options }) {
                 let teamNum = options.teamNum;
@@ -331,9 +339,9 @@ module.exports = {
                     // get number from schedule
                     teamNum = (instance.states.get("match_flip_teams") ? [2, 1] : [1, 2])[teamNum === "left" ? 0 : 1];
                 }
-                return instance.sendAction("multi-map-win", { teamNum, unsetMapAttack: options.unsetMapAttack })
+                return instance.sendAction("multi-map-win", { teamNum, unsetMapAttack: options.unsetMapAttack });
             }
-        })
+        });
 
         addAction("toggle_observer_setting", {
             name: "Toggle Observer Setting",
@@ -344,16 +352,16 @@ module.exports = {
                     choices: [
                         { id: "Show syncer", label: "Syncer" },
                         { id: "Show overlay", label: "Overlay" },
-                        { id: "Use basic overlay", label: "Basic overlay" },
+                        { id: "Use basic overlay", label: "Basic overlay" }
                     ],
                     default: "Show syncer",
                     id: "setting"
                 }
             ],
             async callback({ options }) {
-                return instance.sendAction("set-observer-setting", { setting: options.setting, value: "toggle" })
+                return instance.sendAction("set-observer-setting", { setting: options.setting, value: "toggle" });
             }
-        })
+        });
 
         addAction("desk_display_special", {
             name: "Set Special Desk Display",
@@ -375,16 +383,16 @@ module.exports = {
                         { id: "Hero Draft", label: "Hero Draft" },
                         { id: "Hidden", label: "Hidden" },
                         { id: "Interview", label: "Interview" },
-                        { id: "Casters", label: "Casters" },
+                        { id: "Casters", label: "Casters" }
                     ]
                 }
             ],
             async callback({ options }) {
                 return instance.sendAction("update-broadcast", {
                     deskDisplayMode: options.display
-                })
+                });
             }
-        })
+        });
         addAction("desk_display_text", {
             name: "Set Desk Display with Text",
             description: "",
@@ -397,24 +405,24 @@ module.exports = {
                     choices: [
                         { id: "Event", label: "Event" },
                         { id: "Team 1", label: "Team 1" },
-                        { id: "Team 2", label: "Team 2" },
+                        { id: "Team 2", label: "Team 2" }
                     ]
                 },
                 {
                     type: "textinput",
                     useVariables: true,
                     id: "mainText",
-                    label: "Main text",
+                    label: "Main text"
                 },
                 {
                     type: "textinput",
                     useVariables: true,
                     id: "smallText",
-                    label: "Small text",
+                    label: "Small text"
                 }
             ],
             async callback({ options }, { parseVariablesInString }) {
-                const [mainText, smallText] = await Promise.all([options.mainText, options.smallText].map(t => parseVariablesInString(t)))
+                const [mainText, smallText] = await Promise.all([options.mainText, options.smallText].map(t => parseVariablesInString(t)));
 
                 let text = mainText;
                 if (smallText && smallText !== "") {
@@ -423,9 +431,9 @@ module.exports = {
                 return instance.sendAction("update-broadcast", {
                     deskDisplayMode: `Notice (${options.style})`,
                     deskDisplayText: text
-                })
+                });
             }
-        })
+        });
         addAction("set_break_text", {
             name: "Set Break Text",
             options: [
@@ -433,15 +441,15 @@ module.exports = {
                     type: "textinput",
                     useVariables: true,
                     id: "text",
-                    label: "Break text",
-                },
+                    label: "Break text"
+                }
             ],
             description: "Set the text shown during breaks",
             async callback({ options }, { parseVariablesInString }) {
-                const text = await parseVariablesInString(options.text)
-                return instance.sendAction("update-broadcast", { title: text || ""})
+                const text = await parseVariablesInString(options.text);
+                return instance.sendAction("update-broadcast", { title: text || "" });
             }
-        })
+        });
         addAction("set_gfx_index", {
             name: "Set GFX Index",
             description: "",
@@ -450,22 +458,22 @@ module.exports = {
                     type: "textinput",
                     useVariables: true,
                     id: "gfxID",
-                    label: "GFX Record ID",
+                    label: "GFX Record ID"
                 },
                 {
                     type: "textinput",
                     useVariables: true,
                     id: "index",
-                    label: "Index",
+                    label: "Index"
                 }
             ],
             async callback({ options }, { parseVariablesInString }) {
-                const [gfxID, index] = await Promise.all([options.gfxID, options.index].map(t => parseVariablesInString(t)))
+                const [gfxID, index] = await Promise.all([options.gfxID, options.index].map(t => parseVariablesInString(t)));
                 return instance.sendAction("update-gfx-index", {
                     gfxID, index
-                })
+                });
             }
-        })
+        });
         addAction("generic_action", {
             name: "Generic Action",
             description: "Send data for any custom action",
@@ -474,21 +482,21 @@ module.exports = {
                     type: "textinput",
                     useVariables: true,
                     id: "actionKey",
-                    label: "Action key",
+                    label: "Action key"
                 },
                 {
-                    type: 'textinput',
+                    type: "textinput",
                     useVariables: true,
-                    label: 'Data (JSON)',
-                    id: 'data',
-                },
+                    label: "Data (JSON)",
+                    id: "data"
+                }
             ],
             async callback({ options }, { parseVariablesInString }) {
-                const [actionKey, data] = await Promise.all([options.actionKey, options.data].map(t => parseVariablesInString(t)))
-                return instance.sendAction(actionKey, JSON.parse(data))
+                const [actionKey, data] = await Promise.all([options.actionKey, options.data].map(t => parseVariablesInString(t)));
+                return instance.sendAction(actionKey, JSON.parse(data));
             }
-        })
+        });
 
         return actions;
     }
-}
+};
