@@ -755,6 +755,10 @@ class instance extends InstanceBase {
             const id = match.maps[i];
             let map = await this.getData(id);
 
+            if (map?.winner || map?.draw) {
+                this.setState(`last_finished_map_id`, id);
+            }
+
             let mapNum = i + 1;
             if (map && map.map?.[0]) {
                 this.setState(`map_${mapNum}_name`, "");
