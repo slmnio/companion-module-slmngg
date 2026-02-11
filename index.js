@@ -678,15 +678,14 @@ class instance extends InstanceBase {
             });
         }
 
-        [broadcast.team_1_cams || [], broadcast.team_2_cams || []].forEach(
+        [broadcast.team_1_player_cams || [], broadcast.team_2_player_cams || []].forEach(
             (cams, i) => {
                 const num = i + 1;
                 const teamSide = this.states.get("match_flip_teams")
                     ? ["right", "left"][i]
                     : ["left", "right"][i];
                 cams.forEach(async (camID, ci) => {
-                    const guest = await this.getData(camID);
-                    const player = await this.getData(guest?.player?.[0]);
+                    const player = await this.getData(camID);
 
                     const setCamState = (key, val) => {
                         this.setState(
