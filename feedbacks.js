@@ -8,13 +8,21 @@ async function getThemeB64(address, themeID, size) {
     return getImageB64(`${address}/theme.png?id=${themeID}&${size || "size=72&padding=20"}`);
 }
 
+const stupidCache = new Map();
+
 async function getImageB64(url) {
-    // `${this.config.dataServerAddress}/theme.png?id=${themeID}&${sizes[feedback.options.size] || "size=72&padding=20"}`
-    const image = await fetch(url);
-    const b64 = Buffer.from(await image.arrayBuffer()).toString("base64");
-    const contentType = image.headers.get("content-type");
-    if (contentType.includes("html")) return null;
-    return `data:${contentType};base64,${b64}`;
+    let b64;
+    if (stupidCache.has(url)) {
+        b64 = stupidCache.get(url);
+    } else {
+        const image = await fetch(url);
+        const contentType = image.headers.get("content-type");
+        if (contentType.includes("html")) return null;
+
+        b64 = Buffer.from(await image.arrayBuffer()).toString("base64");
+        stupidCache.set(url, b64);
+    }
+    return `data:image/png;base64,${b64}`;
 }
 
 exports.initFeedbacks = function() {
