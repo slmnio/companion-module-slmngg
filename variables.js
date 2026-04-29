@@ -115,6 +115,14 @@ exports.updateVariableDefinitions = function () {
                 variables.push({ variableId: `player_cam_team_${teamSide}_player_${num}_${key}`, name: `Player Cam - T${ucFirst(teamSide)} P${num} - ${ucFirst(key)}`, description: `${key} of player cam for player ${num} on team ${teamSide}` })
             })
         });
+        ["name", "icon"].forEach(key => {
+            [1,2].forEach(teamNum => {
+                variables.push({ variableId: `ordered_hero_team_${teamNum}_player_${num}_${key}`, name: `Ordered Hero - T${teamNum} P${num} - ${ucFirst(key)}`, description: `${key} of player cam for player ${num} on team ${teamNum}` })
+            });
+            ["left", "right"].forEach(teamSide => {
+                variables.push({ variableId: `ordered_hero_team_${teamSide}_player_${num}_${key}`, name: `Ordered Hero - T${ucFirst(teamSide)} P${num} - ${ucFirst(key)}`, description: `${key} of player cam for player ${num} on team ${teamSide}` })
+            })
+        });
     });
 
 	[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24].forEach(num => {

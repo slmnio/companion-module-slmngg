@@ -713,6 +713,43 @@ class instance extends InstanceBase {
             }
         );
 
+        [broadcast.team_1_ordered_heroes || [], broadcast.team_2_ordered_heroes || []].forEach(
+            (heroes, i) => {
+                const num = i + 1;
+                const teamSide = this.states.get("match_flip_teams")
+                    ? ["right", "left"][i]
+                    : ["left", "right"][i];
+                heroes.forEach(async (heroID, ci) => {
+                    const hero = await this.getData(heroID);
+
+                    const setHeroState = (key, val) => {
+                        this.setState(
+                            `ordered_hero_team_${num}_player_${ci + 1}_${key}`,
+                            val
+                        );
+                        this.setState(
+                            `ordered_hero_team_${teamSide}_player_${ci + 1}_${key}`,
+                            val
+                        );
+                    };
+
+                    if (hero) {
+                        setHeroState("id", hero.id);
+                        setHeroState("name", hero.name);
+                        setHeroState("icon", hero.icon?.[0]?.id);
+                    } else {
+                        setHeroState("id", "");
+                        setHeroState("name", "");
+                        setHeroState("icon", "");
+                    }
+                });
+
+                this.setState(`ordered_hero_team_${num}_ids`, heroes);
+                this.setState(`ordered_hero_team_${teamSide}_ids`, heroes);
+
+            }
+        );
+
         // console.log("broadcast.observer_settings", this.states.get("broadcast_observer_settings"))
         // console.log("Show syncer", this.states.get("broadcast_observer_settings").includes("Show syncer"))
     }

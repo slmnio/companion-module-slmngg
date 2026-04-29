@@ -7,6 +7,13 @@ const Colors = require("./colors");
 async function getThemeB64(address, themeID, size) {
     return getImageB64(`${address}/theme.png?id=${themeID}&${size || "size=72&padding=20"}`);
 }
+async function getComposedImageB64(address, themeID, size) {
+    const u = `${address}/image.png?id=${themeID}&${
+        size ? `size=${size}` : "size=s-72"
+    }`;
+    console.log(u)
+    return getImageB64(u);
+}
 
 const stupidCache = new Map();
 
@@ -392,6 +399,86 @@ exports.initFeedbacks = function() {
                 color: Colors.getHex(this.states.get(`broadcast_event_theme_text_on_logo_background`))
             };
         }
+    });
+    addFeedback("ordered_hero_icon", {
+        name: "Ordered Hero Icon",
+        check: [
+            "theme_ready",
+            "ordered_hero_team_1_ids",
+            "ordered_hero_team_2_ids",
+        ],
+        options: [
+            {
+                type: "dropdown",
+                id: "size",
+                label: "Image size",
+                default: "full",
+                choices: [
+                    { id: "full", label: "Full" },
+                    { id: "medium", label: "Medium" },
+                    { id: "small", label: "Small" },
+                ],
+            },
+            {
+                type: "dropdown",
+                choices: [
+                    { id: "1", label: "Team 1" },
+                    { id: "2", label: "Team 2" },
+                    { id: "left", label: "Left team" },
+                    { id: "right", label: "Right team" },
+                ],
+                label: "Team Number",
+                id: "teamNum",
+                default: "1",
+            },
+            {
+                type: "textinput",
+                default: 1,
+                label: "Team Number Override",
+                id: "teamNumOverride",
+                useVariables: true,
+            },
+            {
+                type: "number",
+                default: 1,
+                label: "Player Number",
+                id: "playerNum",
+            },
+            {
+                type: "textinput",
+                default: 1,
+                label: "Player Number Override",
+                id: "playerNumOverride",
+                useVariables: true,
+            },
+        ],
+        callback: async ({ options }, { parseVariablesInString }) => {
+            const [teamNum, playerNum] = [
+                (await parseVariablesInString(options.teamNumOverride)) ||
+                    options.teamNum,
+                (await parseVariablesInString(options.playerNumOverride)) ||
+                    options.playerNum,
+            ];
+
+            const state = `ordered_hero_team_${teamNum}_player_${playerNum}_icon`;
+            let iconAttachmentID = this.states.get(state);
+            console.log(state, iconAttachmentID);
+            if (!iconAttachmentID) return {};
+
+            const sizes = {
+                full: "h-72",
+                medium: "h-56",
+                small: "h-35",
+            };
+
+            return {
+                png64: await getComposedImageB64(
+                    this.config?.dataServerAddress,
+                    iconAttachmentID,
+                    sizes[options.size]
+                )
+            };
+        },
     });
     addFeedback("gfx_type", {
         name: "GFX type icon",
