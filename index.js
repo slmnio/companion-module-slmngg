@@ -495,6 +495,7 @@ class instance extends InstanceBase {
                 } else {
                     this.generateMatch();
                 }
+                await this.generateBroadcastPostMatch(broadcast);
 
                 if (broadcast?.gfx?.length) {
                     let gfx = await Promise.all(
@@ -518,11 +519,13 @@ class instance extends InstanceBase {
             } else {
                 this.generateBroadcast();
                 this.generateMatch();
+                this.generateBroadcastPostMatch();
             }
         } else {
             this.generateClient();
             this.generateBroadcast();
             this.generateMatch();
+            this.generateBroadcastPostMatch();
         }
     }
 
@@ -678,80 +681,94 @@ class instance extends InstanceBase {
             });
         }
 
-        [broadcast.team_1_player_cams || [], broadcast.team_2_player_cams || []].forEach(
-            (cams, i) => {
-                const num = i + 1;
-                const teamSide = this.states.get("match_flip_teams")
-                    ? ["right", "left"][i]
-                    : ["left", "right"][i];
-                cams.forEach(async (camID, ci) => {
-                    const player = await this.getData(camID);
-
-                    const setCamState = (key, val) => {
-                        this.setState(
-                            `player_cam_team_${num}_player_${ci + 1}_${key}`,
-                            val
-                        );
-                        this.setState(
-                            `player_cam_team_${teamSide}_player_${ci + 1}_${key}`,
-                            val
-                        );
-                    };
-
-                    if (player) {
-                        setCamState("id", player.id);
-                        setCamState("name", player.name);
-                        setCamState("battletag_full", player.battletag);
-                        setCamState("battletag", (player.battletag || "").split("#")?.[0]);
-                    } else {
-                        setCamState("id", "");
-                        setCamState("name", "");
-                        setCamState("battletag_full", "");
-                        setCamState("battletag", "");
-                    }
-                });
-            }
-        );
-
-        [broadcast.team_1_ordered_heroes || [], broadcast.team_2_ordered_heroes || []].forEach(
-            (heroes, i) => {
-                const num = i + 1;
-                const teamSide = this.states.get("match_flip_teams")
-                    ? ["right", "left"][i]
-                    : ["left", "right"][i];
-                heroes.forEach(async (heroID, ci) => {
-                    const hero = await this.getData(heroID);
-
-                    const setHeroState = (key, val) => {
-                        this.setState(
-                            `ordered_hero_team_${num}_player_${ci + 1}_${key}`,
-                            val
-                        );
-                        this.setState(
-                            `ordered_hero_team_${teamSide}_player_${ci + 1}_${key}`,
-                            val
-                        );
-                    };
-
-                    if (hero) {
-                        setHeroState("id", hero.id);
-                        setHeroState("name", hero.name);
-                        setHeroState("icon", hero.icon?.[0]?.id);
-                    } else {
-                        setHeroState("id", "");
-                        setHeroState("name", "");
-                        setHeroState("icon", "");
-                    }
-                });
-
-                this.setState(`ordered_hero_team_${num}_ids`, heroes);
-                this.setState(`ordered_hero_team_${teamSide}_ids`, heroes);
-
-            }
-        );
 
         // console.log("broadcast.observer_settings", this.states.get("broadcast_observer_settings"))
         // console.log("Show syncer", this.states.get("broadcast_observer_settings").includes("Show syncer"))
+    }
+
+
+    async generateBroadcastPostMatch(broadcast) {
+        if (!broadcast) return;
+        ([
+            broadcast.team_1_player_cams || [],
+            broadcast.team_2_player_cams || [],
+        ]).forEach((cams, i) => {
+            const num = i + 1;
+            const teamSide = this.states.get("match_flip_teams")
+                ? ["right", "left"][i]
+                : ["left", "right"][i];
+            cams.forEach(async (camID, ci) => {
+                const player = await this.getData(camID);
+
+                const setCamState = (key, val) => {
+                    this.setState(
+                        `player_cam_team_${num}_player_${ci + 1}_${key}`,
+                        val
+                    );
+                    this.setState(
+                        `player_cam_team_${teamSide}_player_${ci + 1}_${key}`,
+                        val
+                    );
+                };
+
+                if (player) {
+                    setCamState("id", player.id);
+                    setCamState("name", player.name);
+                    setCamState("battletag_full", player.battletag);
+                    setCamState(
+                        "battletag",
+                        (player.battletag || "").split("#")?.[0]
+                    );
+                } else {
+                    setCamState("id", "");
+                    setCamState("name", "");
+                    setCamState("battletag_full", "");
+                    setCamState("battletag", "");
+                }
+            });
+        });
+
+        ([
+            broadcast.team_1_ordered_heroes || [],
+            broadcast.team_2_ordered_heroes || [],
+        ]).forEach((heroes, i) => {
+            const num = i + 1;
+            const teamSide = this.states.get("match_flip_teams")
+                ? ["right", "left"][i]
+                : ["left", "right"][i];
+            console.log(`Ordered heroes`, i, heroes, teamSide);
+
+            this.setState(`ordered_hero_team_${num}_ids`, heroes.join(","));
+            this.setState(
+                `ordered_hero_team_${teamSide}_ids`,
+                heroes.join(",")
+            );
+
+            heroes.forEach(async (heroID, ci) => {
+                const hero = await this.getData(heroID);
+
+                const setHeroState = (key, val) => {
+                    this.setState(
+                        `ordered_hero_team_${num}_player_${ci + 1}_${key}`,
+                        val
+                    );
+                    this.setState(
+                        `ordered_hero_team_${teamSide}_player_${ci + 1}_${key}`,
+                        val
+                    );
+                };
+
+                if (hero) {
+                    setHeroState("id", hero.id);
+                    setHeroState("name", hero.name);
+                    setHeroState("icon", hero.icon?.[0]?.id);
+                } else {
+                    setHeroState("id", "");
+                    setHeroState("name", "");
+                    setHeroState("icon", "");
+                }
+            });
+        });
     }
 
     generateMatch(match) {

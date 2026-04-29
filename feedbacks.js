@@ -404,8 +404,9 @@ exports.initFeedbacks = function() {
         name: "Ordered Hero Icon",
         check: [
             "theme_ready",
-            "ordered_hero_team_1_ids",
-            "ordered_hero_team_2_ids",
+            "match_flip_teams",
+            "ordered_hero_team_left_ids",
+            "ordered_hero_team_right_ids",
         ],
         options: [
             {
