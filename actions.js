@@ -143,7 +143,7 @@ module.exports = {
                     default: true
                 },
                 {
-                    type: "number",
+                    type: "textinput",
                     useVariables: true,
                     label: "Observer Number",
                     id: "number",
@@ -155,7 +155,7 @@ module.exports = {
                 return instance.socket.emit("pip_announce", {
                     clientName: instance.states.get("client_key"),
                     active,
-                    number
+                    number: parseInt(number)
                 });
             }
         });
