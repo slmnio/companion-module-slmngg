@@ -502,10 +502,15 @@ class instance extends InstanceBase {
                         broadcast.gfx.map((id) => this.getData(id))
                     );
                     gfx.forEach((g, i) => {
-                        if (!g?.short) return;
-                        this.setState(`gfx_${i + 1}_short`, g.short);
+                        if (!g?.id) {
+                            this.setState(`gfx_${i + 1}_short`, "");
+                            this.setState(`gfx_${i + 1}_id`, "");
+                            this.setState(`gfx_${i + 1}_type`, "");
+                            return;
+                        }
                         this.setState(`gfx_${i + 1}_id`, g.id);
-                        this.setState(`gfx_${i + 1}_type`, g.type);
+                        this.setState(`gfx_${i + 1}_short`, g.short || g.title || "");
+                        this.setState(`gfx_${i + 1}_type`, g.type || "");
                     });
 
                     if (gfx.length < 24) {
