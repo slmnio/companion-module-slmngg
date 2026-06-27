@@ -11,7 +11,6 @@ async function getComposedImageB64(address, themeID, size) {
     const u = `${address}/image.png?id=${themeID}&${
         size ? `size=${size}` : "size=s-72"
     }`;
-    console.log(u)
     return getImageB64(u);
 }
 
@@ -24,6 +23,7 @@ async function getImageB64(url) {
     } else {
         const image = await fetch(url);
         const contentType = image.headers.get("content-type");
+        if (!contentType) return null;
         if (contentType.includes("html")) return null;
 
         b64 = Buffer.from(await image.arrayBuffer()).toString("base64");
@@ -463,7 +463,7 @@ exports.initFeedbacks = function() {
 
             const state = `ordered_hero_team_${teamNum}_player_${playerNum}_icon`;
             let iconAttachmentID = this.states.get(state);
-            console.log(state, iconAttachmentID);
+            // console.log(state, iconAttachmentID);
             if (!iconAttachmentID) return {};
 
             const sizes = {

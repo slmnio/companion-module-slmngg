@@ -561,15 +561,15 @@ class instance extends InstanceBase {
                         s?.settings?.stream_delay_enabled &&
                         s?.settings?.stream_delay_seconds
                 )?.settings?.stream_delay_seconds;
-                console.log(
-                    "streams",
-                    myStreams.find(
-                        (s) =>
-                            s?.settings?.stream_delay_enabled &&
-                            s?.settings?.stream_delay_seconds
-                    )
-                );
-                console.log(delay);
+                // console.log(
+                //     "streams",
+                //     myStreams.find(
+                //         (s) =>
+                //             s?.settings?.stream_delay_enabled &&
+                //             s?.settings?.stream_delay_seconds
+                //     )
+                // );
+                // console.log(delay);
                 if (delay !== undefined) {
                     this.setState(`client_stream_delay`, parseInt(delay));
                     this.setState(
@@ -838,7 +838,7 @@ class instance extends InstanceBase {
             const teamSide = this.states.get("match_flip_teams")
                 ? ["right", "left"][i]
                 : ["left", "right"][i];
-            console.log(`Ordered heroes`, i, heroes, teamSide);
+            // console.log(`Ordered heroes`, i, heroes, teamSide);
 
             this.setState(`ordered_hero_team_${num}_ids`, heroes.join(","));
             this.setState(
@@ -1082,7 +1082,7 @@ class instance extends InstanceBase {
         const mapNums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
         let current = null;
-        console.log("emptying current");
+        // console.log("emptying current");
 
         if (!match?.maps) {
             // unset team, theme
