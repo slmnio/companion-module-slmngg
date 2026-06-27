@@ -524,11 +524,11 @@ exports.initFeedbacks = function() {
             { type: "colorpicker", label: "Text color (Program)", id: "fg_program", default: Colors.White },
             { type: "colorpicker", label: "Background color (Program)", id: "bg_program", default: Colors.Red },
 
-            { type: "colorpicker", label: "Text color (Program PIP)", id: "fg_active_pip", default: Colors.White },
-            { type: "colorpicker", label: "Background color (Program PIP)", id: "bg_active_pip", default: Colors.Purple },
+            { type: "colorpicker", label: "Text color (Program PIP)", id: "fg_active_pip", default: Colors.Black },
+            { type: "colorpicker", label: "Background color (Program PIP)", id: "bg_active_pip", default: Colors.Pink },
 
             { type: "colorpicker", label: "Text color (Live Obs Dir)", id: "fg_live_obsdir", default: Colors.White },
-            { type: "colorpicker", label: "Background color (Live Obs Dir)", id: "bg_live_obsdir", default: Colors.Blue },
+            { type: "colorpicker", label: "Background color (Live Obs Dir)", id: "bg_live_obsdir", default: Colors.DarkBlue },
         ],
         callback: (feedback) => {
             if (!this.states.get("broadcast_key")) return {};
