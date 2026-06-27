@@ -533,11 +533,10 @@ exports.initFeedbacks = function() {
         callback: (feedback) => {
             if (!this.states.get("broadcast_key")) return {};
 
-            // check this.setState("pip_active", active);
-            let key = this.states.get("pip_active") ? 'active_pip' : this.states.get("observer_tally").toLowerCase();
+            let key = this.states.get("pip_active") ? 'active_pip' : this.states.get("observer_tally")?.toLowerCase();
             return {
-                color: feedback.options[`fg${key ? "_" + key : "_inactive"}`],
-                bgcolor: feedback.options[`bg${key ? "_" + key : "_inactive"}`]
+                color: feedback.options[`fg_${key || "_inactive"}`],
+                bgcolor: feedback.options[`bg_${key || "_inactive"}`]
             };
         }
     });
