@@ -366,8 +366,7 @@ class instance extends InstanceBase {
 
         this.socket.on("prod_preview_program_change", (data) => {
             // TODO: this needs to update with the new obs director stuff
-
-            console.log("prod_preview", data);
+            // console.log("prod_preview", data);
             const { clientSource, clientPositions, previewScene, programScene, clientPlayerName } = data;
 
             storedScenes[clientSource] = {
@@ -390,7 +389,6 @@ class instance extends InstanceBase {
             // }
 
             if (scenes.some(s => (s.clientPositions || []).includes("Producer") && sceneTargetsMyRoles(s.programScene))) {
-                console.log("Producer Program");
                 return this.setState("observer_tally", "program");
             }
 
@@ -403,23 +401,19 @@ class instance extends InstanceBase {
                         // obs is in program
                         // obsdir is in program
                         // fully live
-                        console.log("Obs dir program");
                         return this.setState("observer_tally", "program");
                     } else if (producer?.previewScene && ["OBSDIR", "Director", "Clean feed"].some(str => producer.previewScene.toLowerCase().includes(str.toLowerCase()))) {
                         // obs is in program
                         // obsdir is in previewds
-                        console.log("obs dir preview");
                         return this.setState("observer_tally", "preview");
 
                     }
                 } else {
-                    console.log("obs dir program no producer");
                     return this.setState("observer_tally", "program");
                 }
             }
 
             if(scenes.some(s => (s.clientPositions || []).includes("Producer") && sceneTargetsMyRoles(s.previewScene))) {
-                console.log("producer preview");
                 return this.setState("observer_tally", "preview");
             }
 
@@ -431,7 +425,6 @@ class instance extends InstanceBase {
                     if (producer?.programScene && ["OBSDIR", "Director", "Clean feed"].some(str => producer.programScene.toLowerCase().includes(str.toLowerCase()))) { }
                     else if (producer?.previewScene && ["OBSDIR", "Director", "Clean feed"].some(str => producer.previewScene.toLowerCase().includes(str.toLowerCase()))) { }
                     else {
-                        console.log("obs dir live");
                         return this.setState("observer_tally", "live_obsdir");
                     }
                 }
@@ -446,19 +439,15 @@ class instance extends InstanceBase {
                         // obs is in program
                         // obsdir is in program
                         // fully live
-                        console.log("obs dir preview 2");
                         return this.setState("observer_tally", "preview");
                     } else if (producer?.previewScene && ["OBSDIR", "Director", "Clean feed"].some(str => producer.previewScene.toLowerCase().includes(str.toLowerCase()))) {
                         // obs is in program
                         // obsdir is in preview
-                        console.log("obs dir inactive 1");
                         return this.setState("observer_tally", "inactive");
                     } else {
-                        console.log("obs dir inactive 2");
                         return this.setState("observer_tally", "inactive");
                     }
                 } else {
-                    console.log("obs dir preview 3");
                     return this.setState("observer_tally", "preview");
                 }
             }
