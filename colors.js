@@ -9,6 +9,7 @@ module.exports = {
     DarkBlue: rgb(0, 0, 255),
     Blue: rgb(0, 128, 255),
     Purple: rgb(120, 64, 180),
+    Pink: rgb(255, 0, 255),
     get: (r,g,b) => rgb(r,g,b),
     getHex: (hex) => {
         if (!hex) return 0;
