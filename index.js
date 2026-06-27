@@ -362,10 +362,23 @@ class instance extends InstanceBase {
             console.log("Socket", event, data);
         });
 
+        const storedScenes = {};
+
         this.socket.on("prod_preview_program_change", (data) => {
             // TODO: this needs to update with the new obs director stuff
+
             console.log("prod_preview", data);
             const { clientSource, clientPositions, previewScene, programScene, clientPlayerName } = data;
+
+            storedScenes[clientSource] = {
+                clientSource: clientSource,
+                clientPositions: clientPositions,
+                previewScene: previewScene,
+                programScene: programScene,
+                clientPlayerName: clientPlayerName,
+            }
+
+            let scenes = Object.values(storedScenes || {})
 
             this.setState("producer_program_scene", programScene);
             this.setState("producer_preview_scene", previewScene);
@@ -376,75 +389,92 @@ class instance extends InstanceBase {
             //     return;
             // }
 
-            if (clientPositions.includes("Producer") && sceneTargetsMyRoles(programScene)) {
+            if (scenes.some(s => (s.clientPositions || []).includes("Producer") && sceneTargetsMyRoles(s.programScene))) {
+                console.log("Producer Program");
                 return this.setState("observer_tally", "program");
             }
 
-            if (clientPositions.includes("Observer Director") && sceneTargetsMyRoles(programScene)) {
+            if (scenes.some(s => (s.clientPositions || []).includes("Observer Director") && sceneTargetsMyRoles(s.programScene))) {
 
-                const producer = clientPositions.includes("Producer") && !clientPositions.includes("Observer Director");
+                const producer = scenes.find(s => (s.clientPositions || []).includes("Producer") && (!((s.clientPositions || []).includes("Observer Director"))));
 
                 if (producer) {
                     if (producer?.programScene && ["OBSDIR", "Director", "Clean feed"].some(str => producer.programScene.toLowerCase().includes(str.toLowerCase()))) {
                         // obs is in program
                         // obsdir is in program
                         // fully live
+                        console.log("Obs dir program");
                         return this.setState("observer_tally", "program");
                     } else if (producer?.previewScene && ["OBSDIR", "Director", "Clean feed"].some(str => producer.previewScene.toLowerCase().includes(str.toLowerCase()))) {
                         // obs is in program
                         // obsdir is in previewds
+                        console.log("obs dir preview");
+                        return this.setState("observer_tally", "preview");
+
                     }
                 } else {
+                    console.log("obs dir program no producer");
                     return this.setState("observer_tally", "program");
                 }
             }
 
-            if(clientPositions.includes("Producer") && sceneTargetsMyRoles(previewScene)) {
+            if(scenes.some(s => (s.clientPositions || []).includes("Producer") && sceneTargetsMyRoles(s.previewScene))) {
+                console.log("producer preview");
                 return this.setState("observer_tally", "preview");
             }
 
-            if (clientPositions.includes("Observer Director") && sceneTargetsMyRoles(programScene)) {
+            if (scenes.some(s => (s.clientPositions || []).includes("Observer Director") && sceneTargetsMyRoles(s.programScene))) {
 
-                const producer = clientPositions.includes("Producer") && !clientPositions.includes("Observer Director");
+                const producer = scenes.find(s => (s.clientPositions || []).includes("Producer") && (!((s.clientPositions || []).includes("Observer Director"))));
 
                 if(producer) {
                     if (producer?.programScene && ["OBSDIR", "Director", "Clean feed"].some(str => producer.programScene.toLowerCase().includes(str.toLowerCase()))) { }
                     else if (producer?.previewScene && ["OBSDIR", "Director", "Clean feed"].some(str => producer.previewScene.toLowerCase().includes(str.toLowerCase()))) { }
                     else {
+                        console.log("obs dir live");
                         return this.setState("observer_tally", "live_obsdir");
                     }
                 }
             }
 
-            if (clientPositions.includes("Observer Director") && sceneTargetsMyRoles(previewScene)) {
+            if (scenes.some(s => (s.clientPositions || []).includes("Observer Director") && sceneTargetsMyRoles(s.previewScene))) {
 
-                const producer = clientPositions.includes("Producer") && !clientPositions.includes("Observer Director");
+                const producer = scenes.find(s => (s.clientPositions || []).includes("Producer") && (!((s.clientPositions || []).includes("Observer Director"))));
 
                 if(producer) {
                     if (producer?.programScene && ["OBSDIR", "Director", "Clean feed"].some(str => producer.programScene.toLowerCase().includes(str.toLowerCase()))) {
                         // obs is in program
                         // obsdir is in program
                         // fully live
+                        console.log("obs dir preview 2");
                         return this.setState("observer_tally", "preview");
                     } else if (producer?.previewScene && ["OBSDIR", "Director", "Clean feed"].some(str => producer.previewScene.toLowerCase().includes(str.toLowerCase()))) {
                         // obs is in program
                         // obsdir is in preview
+                        console.log("obs dir inactive 1");
                         return this.setState("observer_tally", "inactive");
                     } else {
+                        console.log("obs dir inactive 2");
                         return this.setState("observer_tally", "inactive");
                     }
                 } else {
+                    console.log("obs dir preview 3");
                     return this.setState("observer_tally", "preview");
                 }
             }
 
-            if (sceneTargetsMyRoles(programScene)) {
-                return this.setState("observer_tally", "program");
-            } else if (sceneTargetsMyRoles(previewScene)) {
-                return this.setState("observer_tally", "preview");
-            } else {
-                return this.setState("observer_tally", "inactive");
+            for (const stream of scenes) {
+                if (sceneTargetsMyRoles(stream.programScene)) {
+                    return this.setState("observer_tally", "program");
+                }
             }
+            for (const stream of scenes) {
+                if (sceneTargetsMyRoles(stream.previewScene)) {
+                    return this.setState("observer_tally", "preview");
+                }
+            }
+
+            return this.setState("observer_tally", "inactive");
         });
 
         this.socket.on("pip_announce", (data) =>

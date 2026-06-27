@@ -513,6 +513,7 @@ exports.initFeedbacks = function() {
 
     addFeedback("observer_tally", {
         name: "Observer Tally",
+        check: ["pip_active"],
         options: [
             { type: "colorpicker", label: "Text color (Inactive)", id: "fg_inactive", default: Colors.White },
             { type: "colorpicker", label: "Background color (Inactive)", id: "bg_inactive", default: Colors.Black },
@@ -524,19 +525,19 @@ exports.initFeedbacks = function() {
             { type: "colorpicker", label: "Background color (Program)", id: "bg_program", default: Colors.Red },
 
             { type: "colorpicker", label: "Text color (Program PIP)", id: "fg_active_pip", default: Colors.White },
-            { type: "colorpicker", label: "Background color (Program PIP)", id: "bg_active_pip", default: Colors.Red },
+            { type: "colorpicker", label: "Background color (Program PIP)", id: "bg_active_pip", default: Colors.Purple },
 
             { type: "colorpicker", label: "Text color (Live Obs Dir)", id: "fg_live_obsdir", default: Colors.White },
             { type: "colorpicker", label: "Background color (Live Obs Dir)", id: "bg_live_obsdir", default: Colors.Blue },
         ],
         callback: (feedback) => {
-            if (!this.states.get("broadcast_key") || !this.states.get("observer_tally")) return {};
+            if (!this.states.get("broadcast_key")) return {};
 
             // check this.setState("pip_active", active);
             let key = this.states.get("pip_active") ? 'active_pip' : this.states.get("observer_tally").toLowerCase();
             return {
-                color: feedback.options[`fg${key ? "_" + key : ""}`],
-                bgcolor: feedback.options[`bg${key ? "_" + key : ""}`]
+                color: feedback.options[`fg${key ? "_" + key : "_inactive"}`],
+                bgcolor: feedback.options[`bg${key ? "_" + key : "_inactive"}`]
             };
         }
     });

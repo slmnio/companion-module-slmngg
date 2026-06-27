@@ -34,6 +34,8 @@ exports.updateVariableDefinitions = function () {
 	variables.push({ variableId: "producer_program_scene", name: "Producer Program scene name" })
 	variables.push({ variableId: "producer_preview_scene", name: "Producer Preview scene name" })
 
+	variables.push({ variableId: "pip_active", name: "Active Picture in Picture" })
+
 	variables.push({ variableId: "broadcast_countdown_seconds", name: "Broadcast countdown timer in raw seconds" })
 	variables.push({ variableId: "broadcast_countdown_seconds_text", name: "Broadcast countdown timer in formatted xx:xx" })
 	variables.push({ variableId: "broadcast_countdown_active", name: "Broadcast countdown is active" })
