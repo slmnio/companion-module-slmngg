@@ -65,10 +65,16 @@ exports.updateVariableDefinitions = function () {
 	variables.push({ variableId: "match_right_score", name: "Match right score", description: "Score for the team on the right of the overlay" });
 
 	variables.push({ variableId: "current_map_name", name: "Current map name", description: "Name of the current map" });
-	variables.push({ variableId: "last_finished_map_id", name: "Last finished map ID", description: "slmngg ID of the last finished map"});
+	variables.push({ variableId: "current_map_id", name: "Current map ID", description: "ID of the current map" });
+	variables.push({ variableId: "current_map_replay_code", name: "Current map replay code", description: "Replay code of the current map" });
+    variables.push({ variableId: "last_finished_map_name", name: "Last finished map name", description: "Name of the last finished map"});
+    variables.push({ variableId: "last_finished_map_id", name: "Last finished map ID", description: "slmngg ID of the last finished map"});
+	variables.push({ variableId: "last_finished_map_replay_code", name: "Last finished map replay code", description: "Replay code of the last finished map"});
 
 	([1,2,3,4,5,6,7,8,9]).forEach(num => {
         variables.push({ variableId: `map_${num}_name`, name: `Map ${num} name`, description: `Name of map ${num}` });
+        variables.push({ variableId: `map_${num}_id`, name: `MatchMap ${num} ID`, description: `ID of MatchMap ${num}` });
+        variables.push({ variableId: `map_${num}_replay_code`, name: `Map ${num} replay code`, description: `Replay code/match ID of map ${num}` });
 	});
 	([1,2,3,4,5,6]).forEach(num => {
 		variables.push({ variableId: `staff_observer_${num}`, name: `Observer ${num} Name`, description: `Name for observer ${num} from match player relationships` })

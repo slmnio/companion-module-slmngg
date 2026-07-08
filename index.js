@@ -1087,9 +1087,10 @@ class instance extends InstanceBase {
         if (!match?.maps) {
             // unset team, theme
 
-            this.setState(`last_finished_map_id`, "");
+            ["name", "id", "replay_code"].forEach((key) => {
+                this.setState(`last_finished_map_${key}`, "");
+                this.setState(`current_map_${key}`, "");
 
-            ["name"].forEach((key) => {
                 mapNums.forEach((mapNum) => {
                     this.setState(`map_${mapNum}_${key}`, "");
                 });
@@ -1103,17 +1104,24 @@ class instance extends InstanceBase {
 
             if (map?.winner || map?.draw) {
                 this.setState(`last_finished_map_id`, id);
+                this.setState(`last_finished_map_replay_code`, map.replay_code);
+                this.setState(`last_finished_map_name`, map.name?.[0]);
             }
 
             let mapNum = i + 1;
             if (map && map.map?.[0]) {
                 this.setState(`map_${mapNum}_name`, "");
+                this.setState(`map_${mapNum}_id`, map.id);
+                this.setState(`map_${mapNum}_replay_code`, map.replay_code);
+
                 let gameMap = await this.getData(map.map?.[0]);
 
                 if (!map.winner && !map.draw && !current) {
                     current = map;
                     if (current?.name?.[0]) {
                         this.setState(`current_map_name`, current?.name?.[0]);
+                        this.setState(`current_map_id`, current?.name?.id);
+                        this.setState(`current_map_replay_code`, current?.replay_code);
                     }
                 }
 
