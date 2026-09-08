@@ -67,6 +67,7 @@ exports.updateVariableDefinitions = function () {
 	variables.push({ variableId: "current_map_name", name: "Current map name", description: "Name of the current map" });
 	variables.push({ variableId: "current_map_id", name: "Current map ID", description: "ID of the current map" });
 	variables.push({ variableId: "current_map_replay_code", name: "Current map replay code", description: "Replay code of the current map" });
+	variables.push({ variableId: "current_map_pick_ban_count", name: "Current map pick & ban count" });
     variables.push({ variableId: "last_finished_map_name", name: "Last finished map name", description: "Name of the last finished map"});
     variables.push({ variableId: "last_finished_map_id", name: "Last finished map ID", description: "slmngg ID of the last finished map"});
 	variables.push({ variableId: "last_finished_map_replay_code", name: "Last finished map replay code", description: "Replay code of the last finished map"});

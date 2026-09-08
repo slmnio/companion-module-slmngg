@@ -1087,7 +1087,7 @@ class instance extends InstanceBase {
         if (!match?.maps) {
             // unset team, theme
 
-            ["name", "id", "replay_code"].forEach((key) => {
+            ["name", "id", "replay_code", "pick_ban_count"].forEach((key) => {
                 this.setState(`last_finished_map_${key}`, "");
                 this.setState(`current_map_${key}`, "");
 
@@ -1120,9 +1120,17 @@ class instance extends InstanceBase {
                     current = map;
                     if (current?.name?.[0]) {
                         this.setState(`current_map_name`, current?.name?.[0]);
-                        this.setState(`current_map_id`, current?.name?.id);
-                        this.setState(`current_map_replay_code`, current?.replay_code);
                     }
+                    this.setState(`current_map_id`, current?.name?.id);
+                    this.setState(`current_map_replay_code`, current?.replay_code);
+                    this.setState(`current_map_pick_ban_count`, [
+                        current?.team_1_picks,
+                        current?.team_1_bans,
+                        current?.team_1_protects,
+                        current?.team_2_picks,
+                        current?.team_2_bans,
+                        current?.team_2_protects,
+                    ].map(a => a ? a?.length || 0 : 0).reduce((a, b) => a + b, 0));
                 }
 
                 if (gameMap) {
